@@ -1,0 +1,123 @@
+local M = {}
+
+M.behavior_initial = {
+	name = "Creature Initial Behavior",
+	type = "simple",
+	dice = "1d10",
+	entries = {
+		[1] = "Inert, motionless",
+		[2] = "Moving, traveling",
+		[3] = "Moving, traveling",
+		[4] = "Wary and alert",
+		[5] = "Friendly",
+		[6] = "Attacking, aggressive",
+		[7] = "Feeding",
+		[8] = "Working, doing something",
+		[9] = "Defensive, protecting itself",
+		[10] = "Exhibits an Ability",
+	},
+}
+
+M.behavior_new = {
+	name = "Creature New Behavior",
+	type = "simple",
+	dice = "1d10",
+	entries = {
+		[1] = "Acts as expected",
+		[2] = "Acts as expected",
+		[3] = "Acts as expected",
+		[4] = "Acts as expected",
+		[5] = "Acts as expected",
+		[6] = "Acts as expected",
+		[7] = "Next expected step, or greater intensity",
+		[8] = "Next expected step, or greater intensity",
+		[9] = "Roll on Initial Behavior",
+		[10] = "Exhibits an Ability",
+	},
+}
+
+M.stat_modifier = {
+	name = "Creature Stat Modifier",
+	type = "simple",
+	dice = "1d10",
+	entries = {
+		[1] = "About 50% lower",
+		[2] = "About 25% lower",
+		[3] = "About 25% lower",
+		[4] = "About 25% lower",
+		[5] = "What you expect",
+		[6] = "What you expect",
+		[7] = "What you expect",
+		[8] = "About 25% higher",
+		[9] = "About 25% higher",
+		[10] = "About 50% higher",
+	},
+}
+
+M.descriptor = {
+	name = "Creature Descriptors",
+	type = "simple",
+	dice = "1d100",
+	entries = {
+		[1] = "Amorphous", [2] = "Loud", [3] = "Loud", [4] = "Aquatic",
+		[5] = "Armed", [6] = "Armored", [7] = "Artificial", [8] = "Avian",
+		[9] = "Beautiful", [10] = "Brutish", [11] = "Chemical", [12] = "Chemical",
+		[13] = "Cloud", [14] = "Cloud", [15] = "Cold", [16] = "Cold",
+		[17] = "Conceal", [18] = "Conceal", [19] = "Constrain", [20] = "Constrain",
+		[21] = "Control", [22] = "Control", [23] = "Counteract", [24] = "Counteract",
+		[25] = "Create", [26] = "Create", [27] = "Damage", [28] = "Damage",
+		[29] = "Deceive", [30] = "Deceive", [31] = "Defense", [32] = "Defense",
+		[33] = "Destroy", [34] = "Destroy", [35] = "Detect", [36] = "Detect",
+		[37] = "Distance", [38] = "Distance", [39] = "Duplicate", [40] = "Duplicate",
+		[41] = "Emission", [42] = "Emission", [43] = "Energy", [44] = "Energy",
+		[45] = "Elements", [46] = "Elements", [47] = "Environment", [48] = "Environment",
+		[49] = "Extra", [50] = "Extra", [51] = "Fire", [52] = "Fire",
+		[53] = "Flight", [54] = "Flight", [55] = "Fangs", [56] = "Fangs",
+		[57] = "Frightening", [58] = "Frightening", [59] = "Heat", [60] = "Heat",
+		[61] = "Fungal", [62] = "Fungal", [63] = "Furry", [64] = "Furry",
+		[65] = "Gaunt", [66] = "Gaunt", [67] = "Glowing", [68] = "Glowing",
+		[69] = "Graceful", [70] = "Graceful", [71] = "Group", [72] = "Group",
+		[73] = "Growling", [74] = "Growling", [75] = "Heavy", [76] = "Heavy",
+		[77] = "Horns", [78] = "Horns", [79] = "Humanoid", [80] = "Humanoid",
+		[81] = "Insectlike", [82] = "Insectlike", [83] = "Intelligent", [84] = "Intelligent",
+		[85] = "Intimidating", [86] = "Intimidating", [87] = "Large", [88] = "Large",
+		[89] = "Leathery", [90] = "Leathery", [91] = "Lethal", [92] = "Lethal",
+		[93] = "Levitating", [94] = "Levitating", [95] = "Light", [96] = "Light",
+		[97] = "Limbs", [98] = "Limbs", [99] = "Mysterious", [100] = "Weakness",
+	},
+}
+
+M.ability = {
+	name = "Creature Abilities",
+	type = "simple",
+	dice = "1d100",
+	entries = {
+		[1] = "Absorb", [2] = "Absorb", [3] = "Attach", [4] = "Attach",
+		[5] = "Attack", [6] = "Attack", [7] = "Bypass", [8] = "Bypass",
+		[9] = "Change", [10] = "Change", [11] = "Chemical", [12] = "Chemical",
+		[13] = "Cloud", [14] = "Cloud", [15] = "Cold", [16] = "Cold",
+		[17] = "Conceal", [18] = "Conceal", [19] = "Constrain", [20] = "Constrain",
+		[21] = "Control", [22] = "Control", [23] = "Counteract", [24] = "Counteract",
+		[25] = "Create", [26] = "Create", [27] = "Damage", [28] = "Damage",
+		[29] = "Deceive", [30] = "Deceive", [31] = "Defense", [32] = "Defense",
+		[33] = "Destroy", [34] = "Destroy", [35] = "Detect", [36] = "Detect",
+		[37] = "Distance", [38] = "Distance", [39] = "Duplicate", [40] = "Duplicate",
+		[41] = "Emission", [42] = "Emission", [43] = "Energy", [44] = "Energy",
+		[45] = "Elements", [46] = "Elements", [47] = "Extra", [48] = "Extra",
+		[49] = "Environment", [50] = "Environment", [51] = "Fire", [52] = "Fire",
+		[53] = "Flight", [54] = "Flight", [55] = "Fangs", [56] = "Fangs",
+		[57] = "Frightening", [58] = "Frightening", [59] = "Heat", [60] = "Heat",
+		[61] = "Heal", [62] = "Heal", [63] = "Illness", [64] = "Illness",
+		[65] = "Mental", [66] = "Mental", [67] = "Minor", [68] = "Minor",
+		[69] = "Object", [70] = "Object", [71] = "Pain", [72] = "Pain",
+		[73] = "Perception", [74] = "Perception", [75] = "Poison", [76] = "Poison",
+		[77] = "Radius", [78] = "Radius", [79] = "Resistance", [80] = "Resistance",
+		[81] = "Stealth", [82] = "Stealth", [83] = "Skill", [84] = "Skill",
+		[85] = "Strange", [86] = "Strange", [87] = "Summon", [88] = "Summon",
+		[89] = "Suppress", [90] = "Suppress", [91] = "Travel", [92] = "Travel",
+		[93] = "Unnatural", [94] = "Unnatural", [95] = "Water", [96] = "Water",
+		[97] = "Weakness", [98] = "Weakness", [99] = "Strength", [100] = "Strength",
+	},
+}
+
+return M
