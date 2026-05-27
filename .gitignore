@@ -39,3 +39,7 @@ luac.out
 *.x86_64
 *.hex
 
+# Project planning
+PLAN_*.md
+discovery-meaning-tables.md
+
