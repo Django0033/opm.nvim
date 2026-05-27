@@ -23,14 +23,17 @@ without leaving Neovim.
 
 Commands:                                                     *opm-commands*
 
-  :OpmFate {question}[:{odds}]  - Ask Yes/No questions
-  :OpmAction                     - Random action word pair
-  :OpmDescription                - Random description word pair
-  :OpmCharacter                 - Generate a character
-  :OpmCharacterBehavior         - Character behavior context
-  :OpmCreature                  - Generate a creature
-  :OpmCreatureBehavior           - Creature new behavior
-  :OpmAdventure                 - Generate adventure plot
+  :Opm                            - Telescope command picker
+  :OpmFate {question}[:{odds}]    - Ask Yes/No questions
+  :OpmAction                      - Random action word pair
+  :OpmDescription                 - Random description word pair
+  :OpmCharacter                  - Generate a character
+  :OpmCharacterBehavior          - Character behavior context
+  :OpmCreature                   - Generate a creature
+  :OpmCreatureBehavior            - Creature new behavior
+  :OpmAdventure                  - Generate adventure plot
+  :OpmMysteryCheck {box_count}   - Discovery Check (d100 + boxes)
+  :OpmMysteryDescriptor           - Roll 2 Mystery Descriptor words
 
 Results appear in a floating window. Use <CR> to insert into your buffer,
 "y" to copy, or "q" to close.
@@ -310,12 +313,28 @@ CONFIGURATION                                              *opm-config*
   require("opm").setup({opts})
 
 Options:
+  keymaps = {
+    picker              = "<leader>rr",
+    fate                = "<leader>rf",
+    action              = "<leader>ra",
+    description         = "<leader>rd",
+    character           = "<leader>rc",
+    character_behavior  = false,
+    creature            = "<leader>rm",
+    creature_behavior   = false,
+    adventure           = "<leader>rv",
+    mystery_check       = false,
+    mystery_descriptor  = false,
+  },
   float = {
     border = "rounded",  -- Border style (none, single, double, rounded,
                          --   solid, shadow)
     height = 0.4,        -- Window height as fraction of editor
     width = 0.6           -- Window width as fraction of editor
   }
+
+Set a keymap to `false` to disable it. Set to a string to map in normal
+mode. All keymaps run the corresponding :Opm* command silently.
 
 ==============================================================================
  vim:tw=78:ts=8:ft=help:norl:

@@ -1,6 +1,19 @@
 local M = {}
 
 local defaults = {
+	keymaps = {
+		picker = "<leader>rr",
+		fate = "<leader>rf",
+		action = "<leader>ra",
+		description = "<leader>rd",
+		character = "<leader>rc",
+		character_behavior = false,
+		creature = "<leader>rm",
+		creature_behavior = false,
+		adventure = "<leader>rv",
+		mystery_check = false,
+		mystery_descriptor = false,
+	},
 	float = { border = "rounded", height = 0.4, width = 0.6 },
 }
 

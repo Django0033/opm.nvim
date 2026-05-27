@@ -31,7 +31,10 @@ use 'Django0033/opm.nvim'
 ```lua
 {
   'Django0033/opm.nvim',
-  opts = {}
+  opts = {},
+  config = function(_, opts)
+    require('opm').setup(opts)
+  end,
 }
 ```
 
@@ -154,6 +157,19 @@ tbl: Mystery Descriptor 2d100=23,67 -> Discover/New
 
 ```lua
 require('opm').setup({
+  keymaps = {
+    picker              = "<leader>rr",
+    fate                = "<leader>rf",
+    action              = "<leader>ra",
+    description         = "<leader>rd",
+    character           = "<leader>rc",
+    character_behavior  = false,
+    creature            = "<leader>rm",
+    creature_behavior   = false,
+    adventure           = "<leader>rv",
+    mystery_check       = false,
+    mystery_descriptor  = false,
+  },
   float = {
     border = "rounded",  -- border style
     height = 0.4,       -- window height
@@ -161,6 +177,8 @@ require('opm').setup({
   }
 })
 ```
+
+Set a keymap to `false` to disable it.
 
 ## Requirements
 
