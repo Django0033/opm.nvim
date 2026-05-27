@@ -55,7 +55,37 @@ vim.pack.add({
 | `:OpmCreatureBehavior` | Roll for creature new behavior |
 | `:OpmAdventure` | Generate adventure plot |
 
-**Odds options:** impossible, nearly_impossible, very_unlikely, unlikely, fifty_fifty, likely, very_likely, nearly_certain, certain
+### Fate Oracle
+
+The Fate Oracle answers Yes/No questions. Run with no arguments for interactive mode, or pass the question and optional odds.
+
+**Interactive mode:**
+```vim
+:OpmFate
+```
+Prompts for a question, then opens a menu to select odds.
+
+**Direct mode** — question and odds separated by `:`:
+```vim
+:OpmFate Is the door locked?
+:OpmFate Is the door locked?:likely
+```
+
+Press `<Tab>` after `:` to autocomplete odds from the table below.
+
+**Odds levels:**
+
+| Odds | Result |
+|------|--------|
+| `impossible` | Almost always No |
+| `nearly_impossible` | Very rarely Yes |
+| `very_unlikely` | Rarely Yes |
+| `unlikely` | Sometimes Yes |
+| `fifty_fifty` | Equal chance (default) |
+| `likely` | Sometimes No |
+| `very_likely` | Rarely No |
+| `nearly_certain` | Very rarely No |
+| `certain` | Almost always Yes |
 
 ## Usage
 
