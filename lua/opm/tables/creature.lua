@@ -36,24 +36,6 @@ M.behavior_new = {
 	},
 }
 
-M.stat_modifier = {
-	name = "Creature Stat Modifier",
-	type = "simple",
-	dice = "1d10",
-	entries = {
-		[1] = "About 50% lower",
-		[2] = "About 25% lower",
-		[3] = "About 25% lower",
-		[4] = "About 25% lower",
-		[5] = "What you expect",
-		[6] = "What you expect",
-		[7] = "What you expect",
-		[8] = "About 25% higher",
-		[9] = "About 25% higher",
-		[10] = "About 50% higher",
-	},
-}
-
 M.descriptor = {
 	name = "Creature Descriptors",
 	type = "simple",

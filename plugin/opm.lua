@@ -87,26 +87,37 @@ vim.api.nvim_create_user_command("OpmCharacter", function()
 	local dice = require("opm.dice")
 	local tables = require("opm.tables")
 
-	local function roll()
+	local function roll_d100()
 		return dice.roll_d100()
 	end
 
-	local identity_roll = roll()
-	local mind_roll = roll()
-	local body_roll = roll()
-	local talent_roll = roll()
+	local identity_roll = roll_d100()
+	local mind_roll = roll_d100()
+	local body_roll = roll_d100()
+	local talent_roll = roll_d100()
 
 	local identity_word = tables.character.identity.entries[identity_roll]
 	local mind_word = tables.character.mind.entries[mind_roll]
 	local body_word = tables.character.body.entries[body_roll]
 	local talent_word = tables.character.talent.entries[talent_roll]
 
+	local stats_roll = dice.roll_d10()
+	local stats_tbl = tables.statistics.statistics
+	local stats_result = "Unknown"
+	for _, entry in ipairs(stats_tbl.entries) do
+		if stats_roll >= entry.min and stats_roll <= entry.max then
+			stats_result = entry.result
+			break
+		end
+	end
+
 	local insert_text = string.format(
-		"gen: Character\n    Identity: d100=%d -> %s\n    Mind: d100=%d -> %s\n    Body: d100=%d -> %s\n    Talent: d100=%d -> %s",
+		"gen: Character\n    Identity: d100=%d -> %s\n    Mind: d100=%d -> %s\n    Body: d100=%d -> %s\n    Talent: d100=%d -> %s\n    Statistics: d10=%d -> %s",
 		identity_roll, identity_word,
 		mind_roll, mind_word,
 		body_roll, body_word,
-		talent_roll, talent_word
+		talent_roll, talent_word,
+		stats_roll, stats_result
 	)
 
 	local lines = vim.split(insert_text, "\n", { trimempty = true })
@@ -118,9 +129,9 @@ vim.api.nvim_create_user_command("OpmCharacterBehavior", function()
 	local behavior = require("opm.behavior")
 
 	local result = behavior.roll_behavior()
-	local display_text = string.format("tbl: CharacterBehavior d100=%d -> %s",
+	local display_text = string.format("tbl: Character Behavior d100=%d -> %s",
 		result.roll, result.result)
-	ui.show_result("CharacterBehavior", { display_text }, { title = "Opm", insert_text = display_text })
+	ui.show_result("Character Behavior", { display_text }, { title = "Opm", insert_text = display_text })
 end, { nargs = 0, desc = "Roll for character behavior context" })
 
 vim.api.nvim_create_user_command("OpmCreature", function()
@@ -128,38 +139,50 @@ vim.api.nvim_create_user_command("OpmCreature", function()
 	local dice = require("opm.dice")
 	local tables = require("opm.tables")
 
-	local function roll(tbl)
-		return tbl.entries[dice.roll_d100()]
+	local didx1 = dice.roll_d100()
+	local didx2 = dice.roll_d100()
+	local desc1 = tables.creature.descriptor.entries[didx1]
+	local desc2 = tables.creature.descriptor.entries[didx2]
+
+	local bidx = dice.roll_d10()
+	local behavior = tables.creature.behavior_initial.entries[bidx]
+
+	local aidx1 = dice.roll_d100()
+	local aidx2 = dice.roll_d100()
+	local ability1 = tables.creature.ability.entries[aidx1]
+	local ability2 = tables.creature.ability.entries[aidx2]
+
+	local stats_roll = dice.roll_d10()
+	local stats_tbl = tables.statistics.statistics
+	local stats_result = "Unknown"
+	for _, entry in ipairs(stats_tbl.entries) do
+		if stats_roll >= entry.min and stats_roll <= entry.max then
+			stats_result = entry.result
+			break
+		end
 	end
 
-	local desc1 = roll(tables.creature.descriptor)
-	local desc2 = roll(tables.creature.descriptor)
-	local behavior = tables.creature.behavior_initial.entries[dice.roll_d10()]
+	local insert_text = string.format(
+		"gen: Creature\n    Appearance: 2d100=%d,%d -> %s/%s\n    Behavior: d10=%d -> %s\n    Ability: 2d100=%d,%d -> %s/%s\n    Statistics: d10=%d -> %s",
+		didx1, didx2, desc1, desc2,
+		bidx, behavior,
+		aidx1, aidx2, ability1, ability2,
+		stats_roll, stats_result
+	)
 
-	local lines = {
-		"One-Page Creature",
-		string.rep("─", 40),
-		"",
-		"APPEARANCE:",
-		"  " .. desc1 .. ", " .. desc2,
-		"",
-		"INITIAL BEHAVIOR:",
-		"  " .. behavior,
-	}
-
-	if behavior == "Exhibits an Ability" then
-		local ability1 = roll(tables.creature.ability)
-		local ability2 = roll(tables.creature.ability)
-		table.insert(lines, "")
-		table.insert(lines, "ABILITY:")
-		table.insert(lines, "  " .. ability1 .. " / " .. ability2)
-	end
-
-	table.insert(lines, "")
-	table.insert(lines, "Reroll with :OpmCreature")
-
-	ui.show_result("Creature Crafter", lines, { title = "Opm" })
+	local lines = vim.split(insert_text, "\n", { trimempty = true })
+	ui.show_result("Creature", lines, { title = "Opm", insert_text = insert_text })
 end, { nargs = 0, desc = "Generate a creature with One-Page Creature Crafter" })
+
+vim.api.nvim_create_user_command("OpmCreatureBehavior", function()
+	local ui = require("opm.ui")
+	local creature_behavior = require("opm.creature_behavior")
+
+	local result = creature_behavior.roll_new_behavior()
+	local display_text = string.format("tbl: Creature Behavior d10=%d -> %s",
+		result.roll, result.result)
+	ui.show_result("Creature Behavior", { display_text }, { title = "Opm", insert_text = display_text })
+end, { nargs = 0, desc = "Roll for creature new behavior" })
 
 vim.api.nvim_create_user_command("OpmAdventure", function()
 	local ui = require("opm.ui")
