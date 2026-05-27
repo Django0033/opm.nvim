@@ -19,5 +19,7 @@ opm-fate-rules	opm.txt	/*opm-fate-rules*
 opm-fate-usage	opm.txt	/*opm-fate-usage*
 opm-meaning	opm.txt	/*opm-meaning*
 opm-meaning-rules	opm.txt	/*opm-meaning-rules*
+opm-mystery	opm.txt	/*opm-mystery*
+opm-mystery-rules	opm.txt	/*opm-mystery-rules*
 opm.setup()	opm.txt	/*opm.setup()*
 opm.txt	opm.txt	/*opm.txt*

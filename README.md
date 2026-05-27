@@ -16,6 +16,7 @@ opm.nvim brings oracle-powered solo RPG tools to your editor. Generate character
 - **Creature Crafter** — Appearance, Behavior, Ability and Statistics
 - **Behavior Engine** — Character and creature behavior context
 - **Adventure Crafter** — Plot themes and turning points
+- **Mystery Crafter** — Discovery checks and mystery descriptors
 
 ## Installation
 
@@ -54,6 +55,8 @@ vim.pack.add({
 | `:OpmCreature` | Generate a creature with all aspects |
 | `:OpmCreatureBehavior` | Roll for creature new behavior |
 | `:OpmAdventure` | Generate adventure plot (prompts for theme) |
+| `:OpmMysteryCheck {box_count}` | Discovery Check: d100 + box count |
+| `:OpmMysteryDescriptor` | Roll 2 Mystery Descriptor words |
 
 ### Fate Oracle
 
@@ -139,6 +142,11 @@ gen: Adventure
     [3] (Mystery) d100=19 -> Secret
     [4] (Social) d100=26 -> Negotiation
     [5] (Personal) d100=6 -> Clue
+```
+
+```
+tbl: Mystery Check d100+5=47 -> New Clue not connected
+tbl: Mystery Descriptor 2d100=23,67 -> Discover/New
 ```
 
 ## Configuration

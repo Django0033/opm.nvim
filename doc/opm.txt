@@ -10,7 +10,8 @@ CONTENTS                                                       *opm-contents*
   5. Creature Crafter .............. |opm-creature|
   6. Creature Behavior ............. |opm-creature-behavior|
   7. Adventure Crafter ............. |opm-adventure|
-  8. Configuration ................. |opm-config|
+  8. Mystery Crafter ............... |opm-mystery|
+  9. Configuration ................. |opm-config|
 
 ==============================================================================
 OVERVIEW                                                              *opm*
@@ -251,7 +252,44 @@ Plot Points ~
 
   Interpret: Consider each word and its Theme tone. Draw connections
   between Plot Points. Include existing Characters or storylines in
-  your interpretation if it makes sense.
+   your interpretation if it makes sense.
+
+==============================================================================
+MYSTERY CRAFTER                                  *opm-mystery*
+
+Discovery Check and Mystery Descriptors for solving mysteries.
+
+USAGE:
+  :OpmMysteryCheck {box_count}    - Discovery Check (d100 + box count)
+  :OpmMysteryDescriptor           - Roll 2 Mystery Descriptor words
+
+------------------------------------------------------------------------------
+RULES (from One-Page Mystery Crafter)       *opm-mystery-rules*
+
+Discovery Checks ~
+
+  Make a Discovery Check after completing a related task or spending a
+  Scene investigating. Roll 1d100 + current number of boxes on the
+  Mystery Matrix.
+
+  Results table:
+    1-15: Nothing useful found
+    16-35: New Suspect not connected
+    36-50: New Clue not connected
+    51-70: New Clue connected to a Suspect
+    71-80: New Suspect connected to a Clue
+    81-100: Connect existing Clue to existing Suspect
+    101+: Definitive clue — connected Suspect is the answer
+
+  The Climber Rule: If a Suspect has 6 or more connections, they are
+  automatically the answer to the mystery.
+
+Mystery Descriptors ~
+
+  Roll 2 words on the Mystery Descriptors table for inspiration when
+  adding a new box to the Matrix. Interpret the combined words as a
+  prompt for what the box represents. The table provides 100 single-word
+  prompts (Accident, Aggressive, Ambition... Witness).
 
 ==============================================================================
 CONFIGURATION                                              *opm-config*

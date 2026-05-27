@@ -249,3 +249,24 @@ vim.api.nvim_create_user_command("OpmAdventure", function()
 		ui.show_result("Adventure", lines, { title = "Opm", insert_text = insert_text })
 	end)
 end, { nargs = 0, desc = "Generate an adventure with One-Page Adventure Crafter" })
+
+vim.api.nvim_create_user_command("OpmMysteryCheck", function(opts)
+	local ui = require("opm.ui")
+	local mystery = require("opm.mystery")
+
+	local box_count = tonumber(opts.args) or 0
+	local result = mystery.roll_check(box_count)
+	local display_text = string.format("tbl: Mystery Check d100+%d=%d -> %s",
+		result.boxes, result.total, result.result)
+	ui.show_result("Mystery Check", { display_text }, { title = "Opm", insert_text = display_text })
+end, { nargs = 1, desc = "Discovery Check: d100 + box count" })
+
+vim.api.nvim_create_user_command("OpmMysteryDescriptor", function()
+	local ui = require("opm.ui")
+	local mystery = require("opm.mystery")
+
+	local result = mystery.roll_descriptor()
+	local display_text = string.format("tbl: Mystery Descriptor 2d100=%d,%d -> %s/%s",
+		result.roll1, result.roll2, result.word1, result.word2)
+	ui.show_result("Mystery Descriptor", { display_text }, { title = "Opm", insert_text = display_text })
+end, { nargs = 0, desc = "Roll 2 Mystery Descriptor words" })
