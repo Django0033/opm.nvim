@@ -52,30 +52,4 @@ function M.interpret_roll(roll, chart)
 	return { type = "no", description = "No", exceptional = false }
 end
 
-function M.format_result(fate_result)
-	local lines = {}
-	table.insert(lines, "┌─────────────────────────────────┐")
-	table.insert(lines, "│ FATE QUESTION                   │")
-	table.insert(lines, "└─────────────────────────────────┘")
-	table.insert(lines, "")
-	table.insert(lines, "Q: " .. fate_result.question)
-	table.insert(lines, "")
-	table.insert(lines, "Odds: " .. fate_result.odds_display)
-	table.insert(lines, "Roll: " .. fate_result.roll)
-	table.insert(lines, "")
-	table.insert(lines, "► " .. fate_result.description)
-
-	if fate_result.is_exceptional then
-		table.insert(lines, "")
-		table.insert(lines, "(Exceptional Result)")
-	end
-
-	if fate_result.is_double then
-		table.insert(lines, "")
-		table.insert(lines, "⚡ DOUBLE — Random Event triggered!")
-	end
-
-	return lines
-end
-
 return M

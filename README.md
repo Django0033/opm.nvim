@@ -46,7 +46,7 @@ vim.pack.add({
 
 | Command | Description |
 |---------|-------------|
-| `:OpmFate {question} [{odds}]` | Ask the oracle (default: fifty_fifty) |
+| `:OpmFate {question}[:{odds}]` | Ask the oracle (default: fifty_fifty) |
 | `:OpmAction` | Random action word pair |
 | `:OpmDescription` | Random description word pair |
 | `:OpmCharacter` | Generate a character with all aspects |
@@ -62,6 +62,12 @@ vim.pack.add({
 Run any command and a floating window appears. Press `<CR>` to insert the result into your markdown file. Press `y` to copy to clipboard or `q` to close.
 
 ### Output Format
+
+**Fate questions** follow:
+```
+? Is the door locked?
+-> Fate (50/50) d100=47 -> Yes
+```
 
 **Table results** follow: `tbl: <name> <dice>=<roll> -> <result>`
 

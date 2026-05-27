@@ -3,18 +3,31 @@ local function get_odds_completion(arglead, cmdline, cursor)
 		"impossible", "nearly_impossible", "very_unlikely", "unlikely",
 		"fifty_fifty", "likely", "very_likely", "nearly_certain", "certain",
 	}
-	if arglead and arglead ~= "" then
+	local colon_pos = arglead:find(":")
+	if not colon_pos then
+		return {}
+	end
+	local odds_prefix = vim.trim(arglead:sub(colon_pos + 1))
+	if odds_prefix ~= "" then
 		odds = vim.tbl_filter(function(v)
-			return v:lower():find(arglead:lower(), 1, true)
+			return v:lower():find(odds_prefix:lower(), 1, true)
 		end, odds)
 	end
 	return odds
 end
 
 vim.api.nvim_create_user_command("OpmFate", function(opts)
-	local args = vim.split(opts.args, "|")
-	local question = args[1] or ""
-	local odds_key = args[2] or "fifty_fifty"
+	local question = opts.args or ""
+	local odds_key = "fifty_fifty"
+
+	local colon_pos = question:find(":")
+	if colon_pos then
+		odds_key = vim.trim(question:sub(colon_pos + 1))
+		question = vim.trim(question:sub(1, colon_pos - 1))
+		if odds_key == "" then
+			odds_key = "fifty_fifty"
+		end
+	end
 
 	if question == "" then
 		vim.ui.input({ prompt = "Question (Yes/No): " }, function(q)
@@ -25,16 +38,25 @@ vim.api.nvim_create_user_command("OpmFate", function(opts)
 			local fate = require("opm.fate")
 			local ui = require("opm.ui")
 
-			vim.ui.input({ prompt = "Odds [fifty_fifty]: " }, function(o)
-				o = o or "fifty_fifty"
-				local result, err = fate.roll_fate(q, o)
+			local odds_options = {
+				"impossible", "nearly_impossible", "very_unlikely", "unlikely",
+				"fifty_fifty", "likely", "very_likely", "nearly_certain", "certain",
+			}
+			vim.ui.select(odds_options, {
+				prompt = "Odds:",
+				default = "fifty_fifty",
+			}, function(choice)
+				if not choice then return end
+				local result, err = fate.roll_fate(q, choice)
 				if err then
 					vim.notify("opm: " .. err, vim.log.levels.ERROR)
 					return
 				end
 
-				local lines = fate.format_result(result)
-				ui.show_result("Fate Question", lines, { title = "Opm" })
+				local insert_text = string.format("? %s\n-> Fate (%s) d100=%d -> %s",
+					result.question, result.odds_display, result.roll, result.description)
+				local lines = vim.split(insert_text, "\n", { trimempty = true })
+				ui.show_result("Fate Question", lines, { title = "Opm", insert_text = insert_text })
 
 				if result.is_double then
 					vim.defer_fn(function()
@@ -51,8 +73,10 @@ vim.api.nvim_create_user_command("OpmFate", function(opts)
 			vim.notify("opm: " .. err, vim.log.levels.ERROR)
 			return
 		end
-		local lines = fate.format_result(result)
-		ui.show_result("Fate Question", lines, { title = "Opm" })
+		local insert_text = string.format("? %s\n-> Fate (%s) d100=%d -> %s",
+			result.question, result.odds_display, result.roll, result.description)
+		local lines = vim.split(insert_text, "\n", { trimempty = true })
+		ui.show_result("Fate Question", lines, { title = "Opm", insert_text = insert_text })
 
 		if result.is_double then
 			vim.defer_fn(function()
