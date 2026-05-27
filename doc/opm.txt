@@ -1,0 +1,271 @@
+*opm.txt*  Oracle-powered solo RPG tools for Neovim
+
+==============================================================================
+CONTENTS                                                       *opm-contents*
+
+  1. Fate Oracle ................... |opm-fate|
+  2. Meaning Tables ................ |opm-action| |opm-description|
+  3. Character Crafter ............. |opm-character|
+  4. Character Behavior ............ |opm-character-behavior|
+  5. Creature Crafter .............. |opm-creature|
+  6. Creature Behavior ............. |opm-creature-behavior|
+  7. Adventure Crafter ............. |opm-adventure|
+  8. Configuration ................. |opm-config|
+
+==============================================================================
+OVERVIEW                                                              *opm*
+
+opm.nvim brings oracle-powered solo RPG tools to your editor. Generate
+characters, creatures, adventures, and seek answers from the oracle — all
+without leaving Neovim.
+
+Commands:                                                     *opm-commands*
+
+  :OpmFate {question}[:{odds}]  - Ask Yes/No questions
+  :OpmAction                     - Random action word pair
+  :OpmDescription                - Random description word pair
+  :OpmCharacter                 - Generate a character
+  :OpmCharacterBehavior         - Character behavior context
+  :OpmCreature                  - Generate a creature
+  :OpmCreatureBehavior           - Creature new behavior
+  :OpmAdventure                 - Generate adventure plot
+
+Results appear in a floating window. Use <CR> to insert into your buffer,
+"y" to copy, or "q" to close.
+
+==============================================================================
+FATE ORACLE                                     *opm-fate* *opm-fate-usage*
+
+Ask Yes/No questions to the Game Master.
+
+USAGE:  :OpmFate [{question}[:{odds}]]
+
+Interactive mode — :OpmFate with no arguments:
+  Prompts for a question, then opens a menu to select odds.
+
+Direct mode — pass question and optional odds:
+  :OpmFate Is the door locked?:likely
+  Use <Tab> after ":" to autocomplete odds.
+
+------------------------------------------------------------------------------
+RULES (from One-Page Mythic)                              *opm-fate-rules*
+
+Follow your expectations about what happens next to move your adventure
+along. When you aren't sure then ask Yes/No questions to find out.
+
+Form A Question: Ask a Yes/No question.
+
+Assign Odds: Decide the Odds of the answer being Yes. 50/50 if the Odds
+  are even or you don't know. Likely, Very Likely, Nearly Certain, or
+  Certain if the Odds are good, and Unlikely, Very Unlikely, Nearly
+  Impossible, or Impossible if the Odds are bad.
+
+Check The Chart: Roll 1d100 and check the Game Master Chart.
+
+Interpret: Interpret the answer.
+
+The Game Master Answers ~
+
+  Yes: Follow your expectations.
+  No: Follow your expectations. If unsure how to interpret this then
+    Discover Meaning for an answer.
+  Exceptional Yes: The answer is Yes and more, go beyond your expectations.
+  Exceptional No: The same as a No, but beyond your expectations.
+
+Random Events ~
+
+  If you Ask The GM and roll a double digit number (11, 22, 33, 44, etc.)
+  then you generate a Random Event. Interpret the results as an Event
+  using the current context to help guide you.
+
+==============================================================================
+MEANING TABLES                  *opm-action* *opm-description* *opm-meaning*
+
+Get more detail about your adventure without asking a Yes/No question.
+
+USAGE:
+  :OpmAction        - Roll 2 words on the Action column
+  :OpmDescription   - Roll 2 words on the Description column
+
+Action column: details about active adventure elements.
+Description column: descriptive elements.
+
+------------------------------------------------------------------------------
+RULES (from One-Page Mythic)                           *opm-meaning-rules*
+
+Roll On The Table: Choose the Action column for details about active
+  adventure elements or the Description column for descriptive elements.
+
+Interpret: Use the word rolled as a prompt and interpret what it means
+  in the context of your adventure.
+
+Get More Words: If the first word isn't enough to make an interpretation
+  then roll for another word to include. Keep rolling for words until
+  an interpretation comes clear.
+
+==============================================================================
+CHARACTER CRAFTER                                      *opm-character*
+
+Generate characters using four Descriptors with associated Keywords.
+
+USAGE:
+  :OpmCharacter     - Generate a full character
+
+Output includes: Identity, Mind, Body, Talent, and Statistics. All
+results include the dice rolled and the word selected.
+
+------------------------------------------------------------------------------
+RULES (from One-Page Character Crafter)           *opm-character-rules*
+
+Each character is defined with four Descriptors:
+
+  Identity — Who is this character? Role, background, social position.
+  Talent — What do they do especially well? Skills, powers, abilities.
+  Body — What do they look like? Physical appearance and traits.
+  Mind — How do they think? Mental attributes and intellect.
+
+Generating Descriptors ~
+
+  Simply decide what describes the character best. Descriptors can come
+  from any source — your genre knowledge, adventure needs, or creative
+  interpretation. Roll on the Keywords tables when you need inspiration
+  or randomness.
+
+Statistics ~
+
+  Statistics are generated as needed, based on what the Descriptor implies.
+  The Statistics table modifies your expectation for game-system stats.
+
+==============================================================================
+CHARACTER BEHAVIOR CONTEXT                    *opm-character-behavior*
+
+Determine how a character acts in a situation.
+
+USAGE:
+  :OpmCharacterBehavior   - Roll for behavior context
+
+------------------------------------------------------------------------------
+RULES (from One-Page Character Crafter)    *opm-character-behavior-rules*
+
+Behavior Context Table ~
+
+  Roll 1d100 on the Behavior Context table to determine what drives the
+  character's current actions. Results range from "Based on Identity
+  Keywords" through "Tries to end the encounter".
+
+  When the result references a Keyword (Identity, Mind, Body, or Talent),
+  select a relevant Keyword from that Descriptor and interpret what it
+  means in context.
+
+==============================================================================
+CREATURE CRAFTER                                      *opm-creature*
+
+Generate creatures with appearance, behavior, abilities, and statistics.
+
+USAGE:
+  :OpmCreature     - Generate a full creature
+
+Output includes: Appearance (2 descriptors), Behavior, Ability, and
+Statistics. All results include the dice rolled and the words selected.
+
+------------------------------------------------------------------------------
+RULES (from One-Page Creature Crafter)           *opm-creature-rules*
+
+Use Expectations: As the encounter unfolds, keep in mind how the creature
+  behaves and what Abilities it shows. This will help inform your
+  expectations about their actions.
+
+Creature Statistics ~
+
+  When you need to generate a stat for the creature, such as hit points
+  or attack damage, estimate what you expect the statistic to be then
+  roll on the Statistics Table to modify your expectation.
+
+Creature Abilities ~
+
+  Roll 2 words on the Abilities Table and interpret them into an ability,
+  power, or limitation that the creature shows. Roll 1 or 2 more words
+  if you need more inspiration.
+
+==============================================================================
+CREATURE BEHAVIOR                             *opm-creature-behavior*
+
+Determine what a creature does next.
+
+USAGE:
+  :OpmCreatureBehavior   - Roll for creature new behavior
+
+------------------------------------------------------------------------------
+RULES (from One-Page Creature Crafter)    *opm-creature-behavior-rules*
+
+Initial Behavior ~
+
+  Roll 1d10 when first encountering a creature. The creature may be Inert,
+  Moving, Wary, Friendly, Attacking, Feeding, Working, Defensive, or
+  Exhibiting an Ability.
+
+New Behavior ~
+
+  Roll 1d10 on subsequent turns: the creature may Act as expected, proceed
+  to the next expected step with greater intensity, roll again on Initial
+  Behavior, or Exhibit an Ability.
+
+==============================================================================
+ADVENTURE CRAFTER                                  *opm-adventure*
+
+Generate Turning Points — major narrative events that shape your adventure.
+
+USAGE:
+  :OpmAdventure    - Select a Theme, generate 5 Plot Points
+
+Opens a menu to choose from five Themes, then generates 5 Plot Points.
+Each Plot Point includes a Theme and an inspirational word.
+
+------------------------------------------------------------------------------
+RULES (from One-Page Adventure Crafter)        *opm-adventure-rules*
+
+Turning Points are major narrative events that shape your adventure.
+Create Turning Points when needed — at the beginning of the adventure
+to get it started, and at junctures during the adventure when you want
+to randomly create new plot twists.
+
+Determine Theme ~
+
+  Before the adventure begins, determine the Main Theme by choosing
+  one of the following:
+
+  - Action: Activity, urgency, and immediate tasks
+  - Tension: Conflict, danger, and impending crises
+  - Mystery: The unknown and uncertain
+  - Social: People interacting with each other
+  - Personal: Having to do with a specific Character
+
+Plot Points ~
+
+  Generate 5 Plot Points to form each Turning Point. Each Plot Point
+  is a specific element that, when combined together, form the Turning
+  Point.
+
+  First Plot Point: Always uses the Main Theme you selected.
+  Remaining Plot Points: Theme is determined randomly.
+
+  Interpret: Consider each word and its Theme tone. Draw connections
+  between Plot Points. Include existing Characters or storylines in
+  your interpretation if it makes sense.
+
+==============================================================================
+CONFIGURATION                                              *opm-config*
+
+                                                         *opm.setup()*
+  require("opm").setup({opts})
+
+Options:
+  float = {
+    border = "rounded",  -- Border style (none, single, double, rounded,
+                         --   solid, shadow)
+    height = 0.4,        -- Window height as fraction of editor
+    width = 0.6           -- Window width as fraction of editor
+  }
+
+==============================================================================
+ vim:tw=78:ts=8:ft=help:norl:

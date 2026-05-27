@@ -91,6 +91,12 @@ Press `<Tab>` after `:` to autocomplete odds from the table below.
 
 Run any command and a floating window appears. Press `<CR>` to insert the result into your markdown file. Press `y` to copy to clipboard or `q` to close.
 
+Full documentation is available inside Neovim:
+
+```vim
+:help opm
+```
+
 ### Output Format
 
 **Fate questions** follow:
