@@ -3,15 +3,16 @@
 ==============================================================================
 CONTENTS                                                       *opm-contents*
 
-  1. Fate Oracle ................... |opm-fate|
-  2. Meaning Tables ................ |opm-action| |opm-description|
-  3. Character Crafter ............. |opm-character|
-  4. Character Behavior ............ |opm-character-behavior|
-  5. Creature Crafter .............. |opm-creature|
-  6. Creature Behavior ............. |opm-creature-behavior|
-  7. Adventure Crafter ............. |opm-adventure|
-  8. Mystery Crafter ............... |opm-mystery|
-  9. Configuration ................. |opm-config|
+  1. Telescope Picker .............. |:Opm|
+  2. Fate Oracle ................... |opm-fate|
+  3. Meaning Tables ................ |opm-action| |opm-description|
+  4. Character Crafter ............. |opm-character|
+  5. Character Behavior ............ |opm-character-behavior|
+  6. Creature Crafter .............. |opm-creature|
+  7. Creature Behavior ............. |opm-creature-behavior|
+  8. Adventure Crafter ............. |opm-adventure|
+  9. Mystery Crafter ............... |opm-mystery|
+  10. Configuration ................. |opm-config|
 
 ==============================================================================
 OVERVIEW                                                              *opm*
@@ -33,6 +34,17 @@ Commands:                                                     *opm-commands*
 
 Results appear in a floating window. Use <CR> to insert into your buffer,
 "y" to copy, or "q" to close.
+
+==============================================================================
+TELESCOPE PICKER                                             *:Opm*
+
+  :Opm    Opens a telescope picker listing all OPM commands.
+
+Select an entry to run the corresponding command. Mystery Check
+prompts for box count before executing.
+
+Requires telescope.nvim (optional). All commands work independently
+without it.
 
 ==============================================================================
 FATE ORACLE                                     *opm-fate* *opm-fate-usage*

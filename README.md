@@ -47,6 +47,7 @@ vim.pack.add({
 
 | Command | Description |
 |---------|-------------|
+| `:Opm` | Open command picker (requires telescope.nvim) |
 | `:OpmFate {question}[:{odds}]` | Ask the oracle (default: fifty_fifty) |
 | `:OpmAction` | Random action word pair |
 | `:OpmDescription` | Random description word pair |

@@ -270,3 +270,61 @@ vim.api.nvim_create_user_command("OpmMysteryDescriptor", function()
 		result.roll1, result.roll2, result.word1, result.word2)
 	ui.show_result("Mystery Descriptor", { display_text }, { title = "Opm", insert_text = display_text })
 end, { nargs = 0, desc = "Roll 2 Mystery Descriptor words" })
+
+vim.api.nvim_create_user_command("Opm", function()
+	local ok, telescope = pcall(require, "telescope")
+	if not ok then
+		vim.notify("opm: telescope.nvim required for command picker", vim.log.levels.WARN)
+		return
+	end
+
+	local pickers = require("telescope.pickers")
+	local finders = require("telescope.finders")
+	local actions = require("telescope.actions")
+	local action_state = require("telescope.actions.state")
+
+	local commands = {
+		{ "Fate Oracle", "OpmFate" },
+		{ "Action", "OpmAction" },
+		{ "Description", "OpmDescription" },
+		{ "Character", "OpmCharacter" },
+		{ "Character Behavior", "OpmCharacterBehavior" },
+		{ "Creature", "OpmCreature" },
+		{ "Creature Behavior", "OpmCreatureBehavior" },
+		{ "Adventure", "OpmAdventure" },
+		{ "Mystery Check", "OpmMysteryCheck" },
+		{ "Mystery Descriptor", "OpmMysteryDescriptor" },
+	}
+
+	pickers.new({}, {
+		prompt_title = "OPM",
+		finder = finders.new_table({
+			results = commands,
+			entry_maker = function(entry)
+				return {
+					value = entry,
+					display = entry[1],
+					ordinal = entry[1],
+				}
+			end,
+		}),
+		sorter = require("telescope.sorters").get_generic_fuzzy_sorter(),
+		attach_mappings = function(prompt_bufnr)
+			actions.select_default:replace(function()
+				actions.close(prompt_bufnr)
+				local selection = action_state.get_selected_entry()
+				local cmd = selection.value[2]
+				if cmd == "OpmMysteryCheck" then
+					vim.ui.input({ prompt = "Box count: " }, function(input)
+						if input and tonumber(input) then
+							vim.cmd(cmd .. " " .. input)
+						end
+					end)
+				else
+					vim.cmd(cmd)
+				end
+			end)
+			return true
+		end,
+	}):find()
+end, { nargs = 0, desc = "Open OPM command picker (requires telescope.nvim)" })
