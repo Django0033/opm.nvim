@@ -214,8 +214,6 @@ vim.api.nvim_create_user_command("OpmAdventure", function()
 	local tables = require("opm.tables")
 
 	local theme_tbl = tables.adventure.themes
-	local theme = theme_tbl.entries[dice.roll_d10()]
-
 	local theme_map = {
 		Action = tables.adventure.plot_action,
 		Tension = tables.adventure.plot_tension,
@@ -224,41 +222,30 @@ vim.api.nvim_create_user_command("OpmAdventure", function()
 		Personal = tables.adventure.plot_personal,
 	}
 
-	local theme_plot = theme_map[theme]
-	if not theme_plot then
-		theme_plot = tables.adventure.plot_action
-	end
+	local theme_options = { "Action", "Tension", "Mystery", "Social", "Personal" }
+	vim.ui.select(theme_options, {
+		prompt = "Adventure Theme:",
+		default = "Action",
+	}, function(theme)
+		if not theme then return end
 
-	local function roll(tbl)
-		return tbl.entries[dice.roll_d100()]
-	end
-
-	local pp = {}
-	for i = 1, 5 do
-		if i == 1 then
-			table.insert(pp, { theme = theme, word = roll(theme_plot) })
-		else
-			local t = theme_tbl.entries[dice.roll_d10()]
-			local pt = theme_map[t] or tables.adventure.plot_action
-			table.insert(pp, { theme = t, word = roll(pt) })
+		local insert_text = "gen: Adventure\n"
+		for i = 1, 5 do
+			local t_name, p_roll, p_word
+			if i == 1 then
+				t_name = theme
+			else
+				t_name = theme_tbl.entries[dice.roll_d10()]
+			end
+			local pt = theme_map[t_name] or tables.adventure.plot_action
+			p_roll = dice.roll_d100()
+			p_word = pt.entries[p_roll]
+			insert_text = insert_text .. string.format(
+				"    [%d] (%s) d100=%d -> %s\n", i, t_name, p_roll, p_word)
 		end
-	end
 
-	local lines = {
-		"One-Page Adventure Crafter",
-		string.rep("─", 40),
-		"",
-		"MAIN THEME: " .. theme,
-		"",
-		"TURNING POINT:",
-	}
-
-	for i, p in ipairs(pp) do
-		table.insert(lines, string.format("  [%d] %-10s %s", i, "(" .. p.theme .. ")", p.word))
-	end
-
-	table.insert(lines, "")
-	table.insert(lines, "Interpret the Plot Points in context.")
-
-	ui.show_result("Adventure Crafter", lines, { title = "Opm" })
+		insert_text = insert_text:gsub("\n$", "")
+		local lines = vim.split(insert_text, "\n", { trimempty = true })
+		ui.show_result("Adventure", lines, { title = "Opm", insert_text = insert_text })
+	end)
 end, { nargs = 0, desc = "Generate an adventure with One-Page Adventure Crafter" })

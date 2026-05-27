@@ -53,7 +53,7 @@ vim.pack.add({
 | `:OpmCharacterBehavior` | Roll for character behavior context |
 | `:OpmCreature` | Generate a creature with all aspects |
 | `:OpmCreatureBehavior` | Roll for creature new behavior |
-| `:OpmAdventure` | Generate adventure plot |
+| `:OpmAdventure` | Generate adventure plot (prompts for theme) |
 
 ### Fate Oracle
 
@@ -124,6 +124,15 @@ gen: Creature
     Behavior: d10=6 -> Attacking, aggressive
     Ability: 2d100=33,77 -> Fire/Flight
     Statistics: d10=4 -> What you expect
+```
+
+```
+gen: Adventure
+    [1] (Action) d100=3 -> Attack
+    [2] (Tension) d100=14 -> Ambush
+    [3] (Mystery) d100=19 -> Secret
+    [4] (Social) d100=26 -> Negotiation
+    [5] (Personal) d100=6 -> Clue
 ```
 
 ## Configuration
