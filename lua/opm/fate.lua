@@ -5,10 +5,6 @@ local dice = require("opm.dice")
 
 M.OddsError = "Invalid odds. Use: impossible, nearly_impossible, very_unlikely, unlikely, fifty_fifty, likely, very_likely, nearly_certain, certain"
 
-function M.is_valid_odds(odds)
-	return constants.ODDS_TYPES[odds] ~= nil
-end
-
 function M.roll_fate(question, odds_key)
 	if not odds_key or odds_key == "" then
 		odds_key = "fifty_fifty"

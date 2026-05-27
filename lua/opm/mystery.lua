@@ -29,8 +29,8 @@ end
 function M.roll_descriptor()
 	local r1 = dice.roll_d100()
 	local r2 = dice.roll_d100()
-	local w1 = tables.mystery.descriptor.entries[r1]
-	local w2 = tables.mystery.descriptor.entries[r2]
+	local w1 = tables.mystery.descriptor.entries[r1] or "Unknown"
+	local w2 = tables.mystery.descriptor.entries[r2] or "Unknown"
 
 	return { roll1 = r1, roll2 = r2, word1 = w1, word2 = w2 }
 end

@@ -25,10 +25,10 @@ function M.roll_meaning(col)
 
 	if col == "action" then
 		local total, entry = roll_range(action_tbl)
-		return { roll = total, column = col, word = entry }
+		return { roll = total, column = col, word = entry or "Unknown" }
 	elseif col == "description" then
 		local total, entry = roll_range(desc_tbl)
-		return { roll = total, column = col, word = entry }
+		return { roll = total, column = col, word = entry or "Unknown" }
 	else
 		local action_total, action_entry = roll_range(action_tbl)
 		local desc_total, desc_entry = roll_range(desc_tbl)

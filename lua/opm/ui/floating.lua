@@ -1,5 +1,6 @@
 local M = {}
 
+local ERROR_PREFIX = require("opm.constants").ERROR_PREFIX .. " "
 local active_windows, window_content, window_target_bufnr = {}, {}, {}
 
 function M.show_result(title, lines, opts)
@@ -26,34 +27,34 @@ end
 function M.copy_result(win_id)
 	local content = window_content[win_id]
 	if not content then
-		vim.notify("opm: No content to copy", vim.log.levels.WARN)
+		vim.notify(ERROR_PREFIX .. "No content to copy", vim.log.levels.WARN)
 		return
 	end
 	local text = type(content) == "string" and content or table.concat(content, "\n")
 	vim.fn.setreg("+", text)
-	vim.notify("opm: Copied to clipboard", vim.log.levels.INFO)
+	vim.notify(ERROR_PREFIX .. "Copied to clipboard", vim.log.levels.INFO)
 end
 
 function M.insert_result(win_id)
 	local content = window_content[win_id]
 	if not content then
-		vim.notify("opm: No content to insert", vim.log.levels.WARN)
+		vim.notify(ERROR_PREFIX .. "No content to insert", vim.log.levels.WARN)
 		return
 	end
 	local target_bufnr = window_target_bufnr[win_id]
 	if not target_bufnr then
-		vim.notify("opm: Could not find target buffer", vim.log.levels.ERROR)
+		vim.notify(ERROR_PREFIX .. "Could not find target buffer", vim.log.levels.ERROR)
 		return
 	end
 	local target_winid = vim.fn.bufwinid(target_bufnr)
 	if target_winid == -1 then
-		vim.notify("opm: Could not find target window", vim.log.levels.ERROR)
+		vim.notify(ERROR_PREFIX .. "Could not find target window", vim.log.levels.ERROR)
 		return
 	end
 
 	local text = type(content) == "string" and content or table.concat(content, "\n")
 	vim.fn.setreg("+", text)
-	vim.notify("opm: Copied to clipboard", vim.log.levels.INFO)
+	vim.notify(ERROR_PREFIX .. "Copied to clipboard", vim.log.levels.INFO)
 
 	M.close(win_id)
 

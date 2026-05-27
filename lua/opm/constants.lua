@@ -36,7 +36,6 @@ M.FATE_CHART = {
 	certain = { yes = { 1, 18 }, no = { 19, 90 }, exyes = { 91, 98 }, exno = { 99, 100 } },
 }
 
-M.ERROR_PREFIX = "Error:"
-M.DEFAULT_TABLES_DIR = "opm-tables"
+M.ERROR_PREFIX = "opm:"
 
 return M

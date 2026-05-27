@@ -1,8 +1,25 @@
+local constants = require("opm.constants")
+local ERROR_PREFIX = constants.ERROR_PREFIX .. " "
+
+local function show_double_event()
+	vim.defer_fn(function()
+		vim.notify(ERROR_PREFIX .. "Random Event triggered!", vim.log.levels.WARN)
+	end, 100)
+end
+
+local function roll_statistics(dice, tables)
+	local roll = dice.roll_d10()
+	local tbl = tables.statistics.statistics
+	for _, entry in ipairs(tbl.entries) do
+		if roll >= entry.min and roll <= entry.max then
+			return roll, entry.result
+		end
+	end
+	return roll, "Unknown"
+end
+
 local function get_odds_completion(arglead, cmdline, cursor)
-	local odds = {
-		"impossible", "nearly_impossible", "very_unlikely", "unlikely",
-		"fifty_fifty", "likely", "very_likely", "nearly_certain", "certain",
-	}
+	local odds = constants.ODDS_TYPES
 	local colon_pos = arglead:find(":")
 	if not colon_pos then
 		return {}
@@ -32,24 +49,20 @@ vim.api.nvim_create_user_command("OpmFate", function(opts)
 	if question == "" then
 		vim.ui.input({ prompt = "Question (Yes/No): " }, function(q)
 			if not q or q == "" then
-				vim.notify("opm: Question required", vim.log.levels.WARN)
+				vim.notify(ERROR_PREFIX .. "Question required", vim.log.levels.WARN)
 				return
 			end
 			local fate = require("opm.fate")
 			local ui = require("opm.ui")
 
-			local odds_options = {
-				"impossible", "nearly_impossible", "very_unlikely", "unlikely",
-				"fifty_fifty", "likely", "very_likely", "nearly_certain", "certain",
-			}
-			vim.ui.select(odds_options, {
+			vim.ui.select(constants.ODDS_TYPES, {
 				prompt = "Odds:",
 				default = "fifty_fifty",
 			}, function(choice)
 				if not choice then return end
 				local result, err = fate.roll_fate(q, choice)
 				if err then
-					vim.notify("opm: " .. err, vim.log.levels.ERROR)
+					vim.notify(ERROR_PREFIX .. err, vim.log.levels.ERROR)
 					return
 				end
 
@@ -59,9 +72,7 @@ vim.api.nvim_create_user_command("OpmFate", function(opts)
 				ui.show_result("Fate Question", lines, { title = "Opm", insert_text = insert_text })
 
 				if result.is_double then
-					vim.defer_fn(function()
-						vim.notify("opm: Random Event triggered by double!", vim.log.levels.WARN)
-					end, 100)
+					show_double_event()
 				end
 			end)
 		end)
@@ -70,7 +81,7 @@ vim.api.nvim_create_user_command("OpmFate", function(opts)
 		local ui = require("opm.ui")
 		local result, err = fate.roll_fate(question, odds_key)
 		if err then
-			vim.notify("opm: " .. err, vim.log.levels.ERROR)
+			vim.notify(ERROR_PREFIX .. err, vim.log.levels.ERROR)
 			return
 		end
 		local insert_text = string.format("? %s\n-> Fate (%s) d100=%d -> %s",
@@ -79,9 +90,7 @@ vim.api.nvim_create_user_command("OpmFate", function(opts)
 		ui.show_result("Fate Question", lines, { title = "Opm", insert_text = insert_text })
 
 		if result.is_double then
-			vim.defer_fn(function()
-				vim.notify("opm: Random Event triggered!", vim.log.levels.WARN)
-			end, 100)
+			show_double_event()
 		end
 	end
 end, { nargs = "*", complete = get_odds_completion, desc = "Ask a Yes/No question to the oracle" })
@@ -125,15 +134,7 @@ vim.api.nvim_create_user_command("OpmCharacter", function()
 	local body_word = tables.character.body.entries[body_roll]
 	local talent_word = tables.character.talent.entries[talent_roll]
 
-	local stats_roll = dice.roll_d10()
-	local stats_tbl = tables.statistics.statistics
-	local stats_result = "Unknown"
-	for _, entry in ipairs(stats_tbl.entries) do
-		if stats_roll >= entry.min and stats_roll <= entry.max then
-			stats_result = entry.result
-			break
-		end
-	end
+	local stats_roll, stats_result = roll_statistics(dice, tables)
 
 	local insert_text = string.format(
 		"gen: Character\n    Identity: d100=%d -> %s\n    Mind: d100=%d -> %s\n    Body: d100=%d -> %s\n    Talent: d100=%d -> %s\n    Statistics: d10=%d -> %s",
@@ -176,15 +177,7 @@ vim.api.nvim_create_user_command("OpmCreature", function()
 	local ability1 = tables.creature.ability.entries[aidx1]
 	local ability2 = tables.creature.ability.entries[aidx2]
 
-	local stats_roll = dice.roll_d10()
-	local stats_tbl = tables.statistics.statistics
-	local stats_result = "Unknown"
-	for _, entry in ipairs(stats_tbl.entries) do
-		if stats_roll >= entry.min and stats_roll <= entry.max then
-			stats_result = entry.result
-			break
-		end
-	end
+	local stats_roll, stats_result = roll_statistics(dice, tables)
 
 	local insert_text = string.format(
 		"gen: Creature\n    Appearance: 2d100=%d,%d -> %s/%s\n    Behavior: d10=%d -> %s\n    Ability: 2d100=%d,%d -> %s/%s\n    Statistics: d10=%d -> %s",
@@ -274,7 +267,7 @@ end, { nargs = 0, desc = "Roll 2 Mystery Descriptor words" })
 vim.api.nvim_create_user_command("Opm", function()
 	local ok, telescope = pcall(require, "telescope")
 	if not ok then
-		vim.notify("opm: telescope.nvim required for command picker", vim.log.levels.WARN)
+		vim.notify(ERROR_PREFIX .. "telescope.nvim required for command picker", vim.log.levels.WARN)
 		return
 	end
 

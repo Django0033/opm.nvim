@@ -49,9 +49,7 @@ _G._print_summary = function()
 		for _, e in ipairs(results.errors) do
 			print("  [" .. e.suite .. "] " .. e.test)
 			print("  " .. e.error)
-end
-
-return true
+		end
 	end
 	print(string.rep("=", 60))
 	if results.fail > 0 then
