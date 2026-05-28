@@ -321,3 +321,44 @@ vim.api.nvim_create_user_command("Opm", function()
 		end,
 	}):find()
 end, { nargs = 0, desc = "Open OPM command picker (requires telescope.nvim)" })
+
+vim.api.nvim_create_user_command("OpmLocArea", function(opts)
+	local ui = require("opm.ui")
+	local location = require("opm.location")
+
+	local pp = tonumber(opts.args) or 0
+	local result = location.roll_area(pp)
+	local lines = vim.split(result, "\n", { trimempty = true })
+	ui.show_result("Area", lines, { title = "Opm", insert_text = result })
+end, { nargs = 1, desc = "Roll Location/Encounter/Object for one area (PP = Progress Points)" })
+
+vim.api.nvim_create_user_command("OpmLocDescriptor", function()
+	local ui = require("opm.ui")
+	local location = require("opm.location")
+
+	local result = location.roll_descriptor()
+	local display_text = string.format("tbl: Location Descriptor 2d100=%d,%d -> %s/%s",
+		result.roll1, result.roll2, result.word1, result.word2)
+	ui.show_result("Location Descriptor", { display_text }, { title = "Opm", insert_text = display_text })
+end, { nargs = 0, desc = "Roll 2 Location Descriptor words" })
+
+vim.api.nvim_create_user_command("OpmLocExit", function(opts)
+	local ui = require("opm.ui")
+	local location = require("opm.location")
+
+	local function show(pp)
+		local result = location.roll_exits(pp)
+		local lines = vim.split(result, "\n", { trimempty = true })
+		ui.show_result("Location Exits", lines, { title = "Opm", insert_text = result })
+	end
+
+	local pp = tonumber(opts.args)
+	if pp == nil then
+		vim.ui.input({ prompt = "PP: " }, function(input)
+			if not input then return end
+			show(tonumber(input) or 0)
+		end)
+	else
+		show(pp)
+	end
+end, { nargs = "?", desc = "Roll connector exits for current area (PP = Progress Points)" })

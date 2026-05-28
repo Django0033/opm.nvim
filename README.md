@@ -61,6 +61,9 @@ vim.pack.add({
 | `:OpmAdventure` | Generate adventure plot (prompts for theme) |
 | `:OpmMysteryCheck {box_count}` | Discovery Check: d100 + box count |
 | `:OpmMysteryDescriptor` | Roll 2 Mystery Descriptor words |
+| `:OpmLocArea {PP}` | Roll Location/Encounter/Object for one area |
+| `:OpmLocDescriptor` | Roll 2 Location Descriptor words |
+| `:OpmLocExit [{PP}]` | Roll connector exits (prompts if no args) |
 
 ### Fate Oracle
 
@@ -168,6 +171,13 @@ gen: Adventure
 ```
 tbl: Mystery Check d100+5=47 -> New Clue not connected
 tbl: Mystery Descriptor 2d100=23,67 -> Discover/New
+```
+
+```
+gen: Area (PP=3)
+    Location: 2d10+3=15 -> Random, Hazard (2d100=12,45 -> Bright/Dark)
+    Encounter: 2d10+3=8 -> Expected
+    Object: 2d10+3=20 -> Known, Climax
 ```
 
 ## Configuration

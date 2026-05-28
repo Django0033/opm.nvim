@@ -13,7 +13,8 @@ CONTENTS                                                       *opm-contents*
   8. Creature Behavior ............. |opm-creature-behavior|
   9. Adventure Crafter ............. |opm-adventure|
   10. Mystery Crafter ............... |opm-mystery|
-  11. Configuration ................. |opm-config|
+  11. Location Crafter .............. |opm-location|
+  12. Configuration ................. |opm-config|
 
 ==============================================================================
 OVERVIEW                                                              *opm*
@@ -333,6 +334,98 @@ Mystery Descriptors ~
   adding a new box to the Matrix. Interpret the combined words as a
   prompt for what the box represents. The table provides 100 single-word
   prompts (Accident, Aggressive, Ambition... Witness).
+
+==============================================================================
+LOCATION CRAFTER                                  *opm-location*
+
+Procedural region exploration. Explore area by area using the Element
+Table. As PP increases, the region becomes more dangerous and revealing.
+
+USAGE:
+  :OpmLocArea {PP}            - Roll Location, Encounter, and Object for one area
+  :OpmLocDescriptor           - Roll 2 Location Descriptor words
+  :OpmLocExit [{PP}]          - Roll connector exits for current area
+
+PP is the current Progress Points. PP increases by +1 per area explored
+(except Complete: PP -6).
+
+------------------------------------------------------------------------------
+RULES (from My Location Crafter v2)         *opm-location-rules*
+
+Region Size ~
+
+  | Small  | PP starts at 3  | A crypt, small cave, spaceship    |
+  | Average| PP starts at 0  | A dungeon, forest, space station  |
+  | Large  | PP starts at -3 | Ruin complex, city, planet         |
+
+Procedure ~
+
+  1. Region Descriptors: Roll 2d100 on the Descriptors table
+     (:OpmLocDescriptor). The 2 words define the region's tone.
+  2. Known Elements: Create a list of known elements per category:
+     - Location: what kind of place
+     - Encounter: who or what is there
+     - Object: what relevant objects are found
+  3. Explore each area:
+     a. Roll Element Table (2d10+PP) 3 times with :OpmLocArea
+     b. Interpret the 3 elements (Location, Encounter, Object)
+     c. Determine exits with :OpmLocExit
+     d. PP +1 (except Complete result)
+  4. Repeat step 3 until Complete or you decide to leave.
+
+Element Table ~
+
+  Roll 2d10 + PP for each category: Location, Encounter, Object.
+
+  ≤4:    None — Nothing relevant
+  5-9:   Expected — The most logical thing for this place
+  10:    Expected, Return — Connects to a previously explored area
+  11-14: Random — 2 random descriptors from the Descriptors table
+  15:    Random, Hazard — Like Random + danger, trap, or setback
+  16:    Random, Discovery — Like Random + beneficial find, clue, or edge
+  17-19: Known — Something from your Known Elements list
+  20:    Known, Climax — Known + final confrontation or major revelation
+  21:    Expected, Exit — Exit from the region (or access to new level)
+  ≥22:   Complete — Last area. Contains the region's conclusion
+
+  Random, Hazard, and Discovery results auto-roll 2 descriptor words.
+
+Interpreting Expected ~
+  Expected: What any sensible person would expect to find here.
+  Expected, Return: Exploration has led you in circles. Connects
+    physically to an area you've already visited. Creates shortcuts,
+    loops, or reveals the place is a labyrinth.
+  Expected, Exit: You found the exit (or entrance to a lower level).
+    If exiting doesn't make narrative sense, treat as Expected.
+
+Interpreting Random ~
+  Random: 2 words from the Descriptors table. Combine and interpret
+    in context.
+  Random, Hazard: The 2 words suggest danger. Add a trap, enemy,
+    collapse, curse, or setback.
+  Random, Discovery: The 2 words suggest benefit. Add a clue, treasure,
+    ally, useful item, or tactical advantage.
+
+Interpreting Known ~
+  Known: Something from your Known Elements list appears. Roll 1d10 to
+    choose which one (or select manually).
+  Known, Climax: Like Known, but also a decisive moment. The final boss,
+    the revelation, the confrontation that changes everything.
+
+Complete ~
+  The climax of the region. What you came to find is here. After
+  resolving this area, consider the region finished.
+
+Connector Exits ~
+
+  :OpmLocExit [{PP}] determines how many exits an area has.
+
+  PP = 0: 3 exits (first area, no roll)
+  PP 1-3: 1d3 exits
+  PP 4-6: 1d2 exits
+  PP ≥7: 1 exit (0 if Complete)
+
+  Run without arguments for interactive mode (prompts for PP).
 
 ==============================================================================
 CONFIGURATION                                              *opm-config*
