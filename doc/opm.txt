@@ -4,15 +4,16 @@
 CONTENTS                                                       *opm-contents*
 
   1. Telescope Picker .............. |:Opm|
-  2. Fate Oracle ................... |opm-fate|
-  3. Meaning Tables ................ |opm-action| |opm-description|
-  4. Character Crafter ............. |opm-character|
-  5. Character Behavior ............ |opm-character-behavior|
-  6. Creature Crafter .............. |opm-creature|
-  7. Creature Behavior ............. |opm-creature-behavior|
-  8. Adventure Crafter ............. |opm-adventure|
-  9. Mystery Crafter ............... |opm-mystery|
-  10. Configuration ................. |opm-config|
+  2. Template Expansion ............ |opm-expand|
+  3. Fate Oracle ................... |opm-fate|
+  4. Meaning Tables ................ |opm-action| |opm-description|
+  5. Character Crafter ............. |opm-character|
+  6. Character Behavior ............ |opm-character-behavior|
+  7. Creature Crafter .............. |opm-creature|
+  8. Creature Behavior ............. |opm-creature-behavior|
+  9. Adventure Crafter ............. |opm-adventure|
+  10. Mystery Crafter ............... |opm-mystery|
+  11. Configuration ................. |opm-config|
 
 ==============================================================================
 OVERVIEW                                                              *opm*
@@ -48,6 +49,33 @@ prompts for box count before executing.
 
 Requires telescope.nvim (optional). All commands work independently
 without it.
+
+==============================================================================
+TEMPLATE EXPANSION                                   *opm-expand*
+
+Write a shorthand template on a line and press <leader>rx to expand
+it into a full result with dice rolls. For Fate questions, write a
+line starting with "?" and press <leader>r?.
+
+Supported templates:                                          *opm-expand-usage*
+
+  tbl: Action                   → tbl: Action 2d100=32,19 -> Decrease/Conclude
+  tbl: Description              → tbl: Description 2d100=32,19 -> Decrease/...
+  tbl: Character Behavior       → tbl: Character Behavior d100=42 -> Is helpful
+  tbl: Creature Behavior        → tbl: Creature Behavior d10=7 -> Next step
+  tbl: Mystery Descriptor       → tbl: Mystery Descriptor 2d100=23,67 -> ...
+  tbl: Mystery Check 5          → tbl: Mystery Check d100+5=47 -> ...
+  gen: Character                → gen: Character ... (5 lines)
+  gen: Creature                 → gen: Creature ... (4 lines)
+  gen: Adventure                → prompts for theme, then gen: Adventure (6 lines)
+  ? Is the door locked?         → ? Is the door locked?
+                                  -> Fate (50/50) d100=47 -> Yes
+  ? Is the door locked? :likely → ? Is the door locked?
+                                  -> Fate (Likely) d100=47 -> Yes
+
+gen: lines replace the current line and append additional lines below.
+All other templates replace the current line only.
+Fate questions use ":" to separate the odds from the question.
 
 ==============================================================================
 FATE ORACLE                                     *opm-fate* *opm-fate-usage*
@@ -325,6 +353,8 @@ Options:
     adventure           = "<leader>rv",
     mystery_check       = false,
     mystery_descriptor  = false,
+    expand              = "<leader>rx",
+    expand_fate         = "<leader>r?",
   },
   float = {
     border = "rounded",  -- Border style (none, single, double, rounded,

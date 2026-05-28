@@ -36,6 +36,18 @@ function M._setup_keymaps()
 			})
 		end
 	end
+
+	if keymaps.expand and keymaps.expand ~= false then
+		vim.keymap.set("n", keymaps.expand, function()
+			require("opm.expand").expand_current_line()
+		end, { silent = true, desc = "OPM: Expand template on current line" })
+	end
+
+	if keymaps.expand_fate and keymaps.expand_fate ~= false then
+		vim.keymap.set("n", keymaps.expand_fate, function()
+			require("opm.expand").expand_fate()
+		end, { silent = true, desc = "OPM: Expand Fate question on current line" })
+	end
 end
 
 return M

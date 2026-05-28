@@ -104,6 +104,23 @@ Full documentation is available inside Neovim:
 :help opm
 ```
 
+### Template Expansion
+
+Write a shorthand template and press `<leader>rx` to expand it inline:
+
+```vim
+tbl: Action                  " expands to: tbl: Action 2d100=32,19 -> Decrease/Conclude
+gen: Character               " expands to: gen: Character ... (5 lines)
+? Is the door locked?        " expands to: ? Is the door locked?\n-> Fate (50/50) d100=47 -> Yes
+```
+
+Fate questions support optional odds separated by `:`:
+```vim
+? Can I climb the wall? :likely
+```
+
+Press `<leader>r?` to expand a Fate question on the current line.
+
 ### Output Format
 
 **Fate questions** follow:
@@ -169,6 +186,8 @@ require('opm').setup({
     adventure           = "<leader>rv",
     mystery_check       = false,
     mystery_descriptor  = false,
+    expand              = "<leader>rx",
+    expand_fate         = "<leader>r?",
   },
   float = {
     border = "rounded",  -- border style

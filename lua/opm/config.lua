@@ -13,6 +13,8 @@ local defaults = {
 		adventure = "<leader>rv",
 		mystery_check = false,
 		mystery_descriptor = false,
+		expand = "<leader>rx",
+		expand_fate = "<leader>r?",
 	},
 	float = { border = "rounded", height = 0.4, width = 0.6 },
 }

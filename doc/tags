@@ -15,6 +15,8 @@ opm-creature-behavior	opm.txt	/*opm-creature-behavior*
 opm-creature-behavior-rules	opm.txt	/*opm-creature-behavior-rules*
 opm-creature-rules	opm.txt	/*opm-creature-rules*
 opm-description	opm.txt	/*opm-description*
+opm-expand	opm.txt	/*opm-expand*
+opm-expand-usage	opm.txt	/*opm-expand-usage*
 opm-fate	opm.txt	/*opm-fate*
 opm-fate-rules	opm.txt	/*opm-fate-rules*
 opm-fate-usage	opm.txt	/*opm-fate-usage*
