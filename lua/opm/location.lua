@@ -39,8 +39,8 @@ function M.roll_area(pp)
 		if descriptors_roll_type[result] then
 			detail = roll_descriptors()
 		end
-		table.insert(lines, string.format("    %s: 2d10+%d=%d -> %s%s",
-			cat, pp, total, result, detail))
+		table.insert(lines, string.format("    %s: 2d10[%d,%d]%+d=%d -> %s%s",
+			cat, d10_1, d10_2, pp, total, result, detail))
 	end
 
 	return table.concat(lines, "\n")
@@ -57,7 +57,7 @@ end
 function M.roll_exits(pp)
 	pp = tonumber(pp) or 0
 
-	if pp == 0 then
+	if pp <= 0 then
 		return "tbl: Location Exits (PP=0) -> 3 exits"
 	elseif pp <= 3 then
 		local roll = dice.roll_dice(3)

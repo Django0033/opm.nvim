@@ -66,9 +66,11 @@ Supported templates:                                          *opm-expand-usage*
   tbl: Creature Behavior        → tbl: Creature Behavior d10=7 -> Next step
   tbl: Mystery Descriptor       → tbl: Mystery Descriptor 2d100=23,67 -> ...
   tbl: Mystery Check 5          → tbl: Mystery Check d100+5=47 -> ...
+  tbl: Location Descriptor      → tbl: Location Descriptor 2d100=12,45 -> ...
   gen: Character                → gen: Character ... (5 lines)
   gen: Creature                 → gen: Creature ... (4 lines)
   gen: Adventure                → prompts for theme, then gen: Adventure (6 lines)
+  gen: Area 3                   → gen: Area (PP=3) ... (3 lines)
   ? Is the door locked?         → ? Is the door locked?
                                   -> Fate (50/50) d100=47 -> Yes
   ? Is the door locked? :likely → ? Is the door locked?
@@ -448,6 +450,9 @@ Options:
     mystery_descriptor  = false,
     expand              = "<leader>rx",
     expand_fate         = "<leader>r?",
+    location_area       = false,
+    location_descriptor = false,
+    location_exits      = false,
   },
   float = {
     border = "rounded",  -- Border style (none, single, double, rounded,

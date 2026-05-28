@@ -287,6 +287,9 @@ vim.api.nvim_create_user_command("Opm", function()
 		{ "Adventure", "OpmAdventure" },
 		{ "Mystery Check", "OpmMysteryCheck" },
 		{ "Mystery Descriptor", "OpmMysteryDescriptor" },
+		{ "Location Area", "OpmLocArea" },
+		{ "Location Descriptor", "OpmLocDescriptor" },
+		{ "Location Exits", "OpmLocExit" },
 	}
 
 	pickers.new({}, {
@@ -326,11 +329,22 @@ vim.api.nvim_create_user_command("OpmLocArea", function(opts)
 	local ui = require("opm.ui")
 	local location = require("opm.location")
 
-	local pp = tonumber(opts.args) or 0
-	local result = location.roll_area(pp)
-	local lines = vim.split(result, "\n", { trimempty = true })
-	ui.show_result("Area", lines, { title = "Opm", insert_text = result })
-end, { nargs = 1, desc = "Roll Location/Encounter/Object for one area (PP = Progress Points)" })
+	local function show(pp)
+		local result = location.roll_area(pp)
+		local lines = vim.split(result, "\n", { trimempty = true })
+		ui.show_result("Area", lines, { title = "Opm", insert_text = result })
+	end
+
+	local pp = tonumber(opts.args)
+	if pp == nil then
+		vim.ui.input({ prompt = "PP: " }, function(input)
+			if not input then return end
+			show(tonumber(input) or 0)
+		end)
+	else
+		show(pp)
+	end
+end, { nargs = "?", desc = "Roll Location/Encounter/Object for one area (PP = Progress Points)" })
 
 vim.api.nvim_create_user_command("OpmLocDescriptor", function()
 	local ui = require("opm.ui")

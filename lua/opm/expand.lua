@@ -6,6 +6,7 @@ local behavior = require("opm.behavior")
 local creature_behavior = require("opm.creature_behavior")
 local mystery = require("opm.mystery")
 local fate = require("opm.fate")
+local location = require("opm.location")
 local tables = require("opm.tables")
 local ui = require("opm.ui")
 
@@ -31,6 +32,10 @@ local tbl_formatters = {
 	["Mystery Descriptor"] = function()
 		local r = mystery.roll_descriptor()
 		return string.format("tbl: Mystery Descriptor 2d100=%d,%d -> %s/%s", r.roll1, r.roll2, r.word1, r.word2)
+	end,
+	["Location Descriptor"] = function()
+		local r = location.roll_descriptor()
+		return string.format("tbl: Location Descriptor 2d100=%d,%d -> %s/%s", r.roll1, r.roll2, r.word1, r.word2)
 	end,
 }
 
@@ -140,6 +145,12 @@ function M.expand_current_line()
 
 	elseif trimmed:match("^gen: ") then
 		local name = trimmed:match("^gen: (.+)")
+		local area_pp = name:match("^Area%s+(%-?%d+)$")
+		if area_pp then
+			local result = location.roll_area(tonumber(area_pp))
+			replace_line(result)
+			return
+		end
 		local fmt = gen_formatters[name]
 		if fmt then
 			local result, async = fmt()

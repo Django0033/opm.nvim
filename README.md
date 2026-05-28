@@ -113,7 +113,9 @@ Write a shorthand template and press `<leader>rx` to expand it inline:
 
 ```vim
 tbl: Action                  " expands to: tbl: Action 2d100=32,19 -> Decrease/Conclude
+tbl: Location Descriptor     " expands to: tbl: Location Descriptor 2d100=12,45 -> Clue/Dark
 gen: Character               " expands to: gen: Character ... (5 lines)
+gen: Area 3                  " expands to: gen: Area (PP=3) ... (3 lines)
 ? Is the door locked?        " expands to: ? Is the door locked?\n-> Fate (50/50) d100=47 -> Yes
 ```
 
@@ -198,6 +200,9 @@ require('opm').setup({
     mystery_descriptor  = false,
     expand              = "<leader>rx",
     expand_fate         = "<leader>r?",
+    location_area       = false,
+    location_descriptor = false,
+    location_exits      = false,
   },
   float = {
     border = "rounded",  -- border style
