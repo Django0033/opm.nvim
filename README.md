@@ -200,9 +200,9 @@ require('opm').setup({
     mystery_descriptor  = false,
     expand              = "<leader>rx",
     expand_fate         = "<leader>r?",
-    location_area       = false,
-    location_descriptor = false,
-    location_exits      = false,
+    location_area       = "<leader>rl",
+    location_descriptor = "<leader>rs",
+    location_exits      = "<leader>re",
   },
   float = {
     border = "rounded",  -- border style
