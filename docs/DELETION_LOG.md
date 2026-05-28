@@ -1,5 +1,33 @@
 # Code Deletion Log
 
+## 2026-05-28 Refactor Session
+
+### Dead Exports Made Local
+
+| File | Item | Change |
+|------|------|--------|
+| `lua/opm/fate.lua:6` | `M.OddsError` | Exported but only used internally — made local `ODDS_ERROR` |
+| `lua/opm/fate.lua:35` | `M.interpret_roll()` | Exported but only used internally by `roll_fate()` — made local |
+
+### Dead Code Branch Removed
+
+| File | Item | Reason |
+|------|------|--------|
+| `lua/opm/meaning.lua:32-41` | `else` branch in `roll_meaning()` | Never reached — all 10 callers pass `"action"` or `"description"`. The branch returned a `{ action, description }` result shape that didn't match what any caller consumed (`.word` access). |
+
+### Impact
+
+- Lines removed: 12 (net: 35 deleted, 23 added)
+- Dead exports eliminated: 2
+- Dead code branches eliminated: 1
+- Files modified: 2 (fate.lua, meaning.lua)
+
+### Testing
+
+- All 13 tests passing (13 passed, 0 failed)
+
+---
+
 ## 2026-05-27 Refactor Session
 
 ### Unused Exports Removed

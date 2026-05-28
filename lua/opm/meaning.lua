@@ -20,25 +20,13 @@ end
 
 function M.roll_meaning(col)
 	col = col or "action"
-	local action_tbl = tables.meaning.action
-	local desc_tbl = tables.meaning.description
-
 	if col == "action" then
-		local total, entry = roll_range(action_tbl)
+		local total, entry = roll_range(tables.meaning.action)
 		return { roll = total, column = col, word = entry or "Unknown" }
-	elseif col == "description" then
-		local total, entry = roll_range(desc_tbl)
-		return { roll = total, column = col, word = entry or "Unknown" }
-	else
-		local action_total, action_entry = roll_range(action_tbl)
-		local desc_total, desc_entry = roll_range(desc_tbl)
-		return {
-			roll = action_total,
-			column = "both",
-			action = action_entry,
-			description = desc_entry,
-		}
 	end
+	-- col == "description" is the only other caller
+	local total, entry = roll_range(tables.meaning.description)
+	return { roll = total, column = col, word = entry or "Unknown" }
 end
 
 return M
