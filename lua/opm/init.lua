@@ -3,6 +3,7 @@ local M = {}
 M.config = require("opm.config")
 M.dice = require("opm.dice")
 M.fate = require("opm.fate")
+M.hex_map = require("opm.hex_map")
 M.meaning = require("opm.meaning")
 M.ui = require("opm.ui")
 function M.setup(opts)
@@ -29,6 +30,9 @@ function M._setup_keymaps()
 		location_area       = { "OpmLocArea", "Roll area elements" },
 		location_descriptor = { "OpmLocDescriptor", "Roll location descriptors" },
 		location_exits      = { "OpmLocExit", "Roll connector exits" },
+		hex_terrain         = { "OpmHexTerrain", "Hex terrain type" },
+		hex_new             = { "OpmNewHex", "New hex terrain" },
+		hex_poi             = { "OpmHexPOI", "Hex point of interest" },
 	}
 	for name, entry in pairs(commands) do
 		local lhs = keymaps[name]

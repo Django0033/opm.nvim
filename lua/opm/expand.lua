@@ -7,6 +7,7 @@ local creature_behavior = require("opm.creature_behavior")
 local mystery = require("opm.mystery")
 local fate = require("opm.fate")
 local location = require("opm.location")
+local hex_map = require("opm.hex_map")
 local tables = require("opm.tables")
 local ui = require("opm.ui")
 
@@ -36,6 +37,14 @@ local tbl_formatters = {
 	["Location Descriptor"] = function()
 		local r = location.roll_descriptor()
 		return string.format("tbl: Location Descriptor 2d100=%d,%d -> %s/%s", r.roll1, r.roll2, r.word1, r.word2)
+	end,
+	["Hex Terrain"] = function()
+		local text, _, _ = hex_map.roll_terrain()
+		return text
+	end,
+	["Hex POI"] = function()
+		local text = hex_map.roll_poi()
+		return text
 	end,
 }
 
@@ -136,6 +145,13 @@ function M.expand_current_line()
 				return
 			end
 		end
+		local chaos = name:match("New Hex (%d+)$")
+		if chaos then
+			local text, _, _ = hex_map.roll_new_hex(tonumber(chaos))
+			replace_line(text)
+			return
+		end
+
 		local fmt = tbl_formatters[name]
 		if fmt then
 			replace_line(fmt())

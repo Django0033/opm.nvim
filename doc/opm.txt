@@ -11,10 +11,11 @@ CONTENTS                                                       *opm-contents*
   6. Character Behavior ............ |opm-character-behavior|
   7. Creature Crafter .............. |opm-creature|
   8. Creature Behavior ............. |opm-creature-behavior|
-  9. Adventure Crafter ............. |opm-adventure|
-  10. Mystery Crafter ............... |opm-mystery|
-  11. Location Crafter .............. |opm-location|
-  12. Configuration ................. |opm-config|
+   9. Adventure Crafter ............. |opm-adventure|
+   10. Mystery Crafter ............... |opm-mystery|
+   11. Hex Map Generator ............. |opm-hex-map|
+   12. Location Crafter .............. |opm-location|
+   13. Configuration ................. |opm-config|
 
 ==============================================================================
 OVERVIEW                                                              *opm*
@@ -36,6 +37,9 @@ Commands:                                                     *opm-commands*
   :OpmAdventure                  - Generate adventure plot
   :OpmMysteryCheck {box_count}   - Discovery Check (d100 + boxes)
   :OpmMysteryDescriptor           - Roll 2 Mystery Descriptor words
+  :OpmHexTerrain                 - Roll 2d10 for hex terrain type
+  :OpmNewHex [{CF}]              - Roll 2d10 + chaos modifier for next hex
+  :OpmHexPOI                     - Roll 2d10 + 1d6 for a hex point of interest
 
 Results appear in a floating window. Use <CR> to insert into your buffer,
 "y" to copy, or "q" to close.
@@ -67,6 +71,9 @@ Supported templates:                                          *opm-expand-usage*
   tbl: Mystery Descriptor       → tbl: Mystery Descriptor 2d100=23,67 -> ...
   tbl: Mystery Check 5          → tbl: Mystery Check d100+5=47 -> ...
   tbl: Location Descriptor      → tbl: Location Descriptor 2d100=12,45 -> ...
+  tbl: Hex Terrain              → tbl: Hex Terrain 2d10=12 -> Grassland
+  tbl: New Hex 5                → tbl: New Hex 2d10[4,7]+0=11 -> Same as current terrain
+  tbl: Hex POI                  → tbl: Hex POI 2d10=6 -> Barrow mounds — (1d6=5) ...
   gen: Character                → gen: Character ... (5 lines)
   gen: Creature                 → gen: Creature ... (4 lines)
   gen: Adventure                → prompts for theme, then gen: Adventure (6 lines)
@@ -338,6 +345,147 @@ Mystery Descriptors ~
   prompts (Accident, Aggressive, Ambition... Witness).
 
 ==============================================================================
+HEX MAP GENERATOR                                 *opm-hex-map*
+
+Procedural hex map generation. Roll terrain, step through hexes with
+chaos modifier, and discover points of interest.
+
+USAGE:
+  :OpmHexTerrain         - Roll 2d10 for starting terrain type
+  :OpmNewHex [{CF}]      - Roll 2d10 + chaos modifier for next hex
+  :OpmHexPOI             - Roll 2d10 + 1d6 for a point of interest
+
+------------------------------------------------------------------------------
+RULES (from My Hex Map Generator)            *opm-hex-map-rules*
+
+Procedure ~
+
+  1. Roll starting terrain with :OpmHexTerrain (2d10).
+  2. Set Chaos Factor to 1.
+  3. Choose a direction.
+  4. Roll next hex with :OpmNewHex {CF} (2d10 + chaos modifier).
+  5. If doubles are rolled, a point of interest is triggered.
+     Roll :OpmHexPOI when this happens.
+  6. Same terrain as previous hex → CF+1. Different terrain → CF−1.
+     Never go below 1 or above 9.
+  7. Repeat steps 3–6.
+
+Hex Terrain Table ~                                        *opm-hex-terrain*
+
+  Roll 2d10 on the Hex Terrain table:
+
+  2d10   |   Terrain
+  -------|---------------
+  2-3    |   Ocean
+  4-6    |   River/Coast
+  7-9    |   Swamp
+  10-12  |   Grassland
+  13-15  |   Forest/Jungle
+  16-18  |   Mountains
+  19-20  |   Desert/Arctic
+
+  Terrain order: Ocean(1), River/Coast(2), Swamp(3), Grassland(4),
+  Forest/Jungle(5), Mountains(6), Desert/Arctic(7). "+1 step" and
+  "+2 step" results advance through this order.
+
+New Hex Table ~                                            *opm-new-hex*
+
+  Roll 2d10 + chaos modifier, clamped to 2–20:
+
+  2d10+CF |   Result
+  --------|------------------------------
+  2-10    |   Same as current terrain
+  11-17   |   Current terrain +1 step
+  18-20   |   Current terrain +2 step
+
+Chaos Modifier Table ~
+
+  Chaos Factor |   Modifier
+  -------------|------------
+  1            |   -5
+  2            |   -4
+  3            |   -2
+  4            |   -1
+  5            |    0
+  6            |   +1
+  7            |   +2
+  8            |   +4
+  9            |   +5
+
+:DANGER: Doubles in New Hex roll trigger a WARN notification:
+"Point of Interest triggered! Roll OpmHexPOI". Roll :OpmHexPOI
+to discover a point of interest at this location.
+
+Points of Interest Table ~                                 *opm-hex-poi*
+
+  Roll 2d10 for location type, then 1d6 for development:
+
+  2d10   |   Location          |   1d6   |   Development
+  -------|---------------------|---------|-------------------------------
+  2-3    |   Fortified keep    |   1-2   |   Over/connected to a large tomb
+         |                     |   3-4   |   Abandoned, haunted by its defenders
+         |                     |   5-6   |   Occupied by a warlord's forces
+  4-5    |   Temple            |   1-2   |   Being attacked by an invader
+         |                     |   3-4   |   Abandoned — the god has left
+         |                     |   5-6   |   Pilgrims gather for a rare ceremony
+  6-7    |   Barrow mounds     |   1-2   |   Around/over sleeping dragon
+         |                     |   3-4   |   Recently disturbed — something escaped
+         |                     |   5-6   |   An ancient king's burial, still guarded
+  8-9    |   Village           |   1-2   |   Abandoned and in ruins
+         |                     |   3-4   |   Prosperous, but hiding a dark secret
+         |                     |   5-6   |   Quarantined — plague or curse
+  10-11  |   Town              |   1-2   |   Guarded by its current residents
+         |                     |   3-4   |   Preparing for an annual festival
+         |                     |   5-6   |   Tense — two factions about to clash
+  12-13  |   City/metropolis   |   1-2   |   Under siege by a warband
+         |                     |   3-4   |   Ruled by a corrupt council
+         |                     |   5-6   |   Built on top of ancient ruins
+  14-15  |   Monster's nest    |   1-2   |   Where a secret circle of wizards meets
+         |                     |   3-4   |   Breeding ground — the young are everywhere
+         |                     |   5-6   |   Recently abandoned — signs of a larger predator
+  16-17  |   Cave formation    |   1-2   |   Controlled by a malevolent sorcerer
+         |                     |   3-4   |   Natural wonder — draws travelers and scholars
+         |                     |   5-6   |   Connects to the Underdark/Deep Roads
+  18-19  |   Ancient dolmens   |   1-2   |   Protected by an age-old guardian
+         |                     |   3-4   |   A portal to another place or time
+         |                     |   5-6   |   Calendar stones — align on solstices for power
+  20     |   Barbarian camp    |   1-2   |   Hiding a great treasure
+         |                     |   3-4   |   Preparing for war — hundreds of warriors
+         |                     |   5-6   |   Peaceful traders, unfairly called barbarians
+
+------------------------------------------------------------------------------
+USAGE: Interactive and Template                     *opm-hex-map-usage*
+
+:OpmHexTerrain - no arguments:
+  Rolls 2d10 and shows the terrain result.
+
+  Output: tbl: Hex Terrain 2d10=12 -> Grassland
+
+:OpmNewHex [{CF}] - optional chaos factor:
+  Pass chaos factor as argument (:OpmNewHex 5) or run with no
+  arguments for interactive prompt.
+
+  Output: tbl: New Hex 2d10[4,7]+0=11 -> Current terrain +1 step
+
+  Individual dice are shown: 2d10[4,7] instead of 2d10=11.
+  The chaos modifier is appended: +0, -2, +5, etc.
+
+:OpmHexPOI - no arguments:
+  Rolls 2d10 for location type, then 1d6 for development.
+
+  Output: tbl: Hex POI 2d10=14 -> Monster's nest — (1d6=4) Breeding
+  ground, the young are everywhere
+
+Template expansion is also supported:
+
+  tbl: Hex Terrain    → tbl: Hex Terrain 2d10=12 -> Grassland
+  tbl: New Hex 5      → tbl: New Hex 2d10[4,7]+0=11 -> Current terrain +1 step
+  tbl: Hex POI        → tbl: Hex POI 2d10=6 -> Barrow mounds — (1d6=5) ...
+
+  New Hex template extracts the chaos number from the line.
+  E.g. "tbl: New Hex 5" uses CF=5 for the roll.
+
+==============================================================================
 LOCATION CRAFTER                                  *opm-location*
 
 Procedural region exploration. Explore area by area using the Element
@@ -450,6 +598,9 @@ Options:
     mystery_descriptor  = "<leader>ry",
     expand              = "<leader>rx",
     expand_fate         = "<leader>r?",
+    hex_terrain         = "<leader>rt",
+    hex_new             = "<leader>rn",
+    hex_poi             = "<leader>rp",
     location_area       = "<leader>rl",
     location_descriptor = "<leader>rs",
     location_exits      = "<leader>re",

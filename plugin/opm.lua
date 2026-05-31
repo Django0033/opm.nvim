@@ -1,9 +1,9 @@
 local constants = require("opm.constants")
 local ERROR_PREFIX = constants.ERROR_PREFIX .. " "
 
-local function show_double_event()
+local function show_double_event(msg)
 	vim.defer_fn(function()
-		vim.notify(ERROR_PREFIX .. "Random Event triggered!", vim.log.levels.WARN)
+		vim.notify(ERROR_PREFIX .. (msg or "Random Event triggered!"), vim.log.levels.WARN)
 	end, 100)
 end
 
@@ -264,6 +264,45 @@ vim.api.nvim_create_user_command("OpmMysteryDescriptor", function()
 	ui.show_result("Mystery Descriptor", { display_text }, { title = "Opm", insert_text = display_text })
 end, { nargs = 0, desc = "Roll 2 Mystery Descriptor words" })
 
+vim.api.nvim_create_user_command("OpmHexTerrain", function()
+	local hex_map = require("opm.hex_map")
+	local ui = require("opm.ui")
+
+	local text, total, result = hex_map.roll_terrain()
+	ui.show_result("Hex Terrain", { text }, { title = "Opm", insert_text = text })
+end, { nargs = 0, desc = "Roll 2d10 for hex terrain type" })
+
+vim.api.nvim_create_user_command("OpmNewHex", function(opts)
+	local hex_map = require("opm.hex_map")
+	local ui = require("opm.ui")
+
+	local function show(chaos)
+		local text, total, result, is_double = hex_map.roll_new_hex(chaos)
+		ui.show_result("New Hex", { text }, { title = "Opm", insert_text = text })
+		if is_double then
+			show_double_event("Point of Interest triggered! Roll OpmHexPOI")
+		end
+	end
+
+	local chaos = tonumber(opts.args)
+	if chaos == nil then
+		vim.ui.input({ prompt = "Chaos Factor (1-9): ", default = "1" }, function(input)
+			if not input then return end
+			show(tonumber(input) or 1)
+		end)
+	else
+		show(chaos)
+	end
+end, { nargs = "?", desc = "Roll 2d10 + chaos modifier for next hex terrain" })
+
+vim.api.nvim_create_user_command("OpmHexPOI", function()
+	local hex_map = require("opm.hex_map")
+	local ui = require("opm.ui")
+
+	local text = hex_map.roll_poi()
+	ui.show_result("Hex POI", { text }, { title = "Opm", insert_text = text })
+end, { nargs = 0, desc = "Roll 2d10 + 1d6 for a hex point of interest" })
+
 vim.api.nvim_create_user_command("Opm", function()
 	local ok, telescope = pcall(require, "telescope")
 	if not ok then
@@ -278,6 +317,9 @@ vim.api.nvim_create_user_command("Opm", function()
 
 	local commands = {
 		{ "Fate Oracle", "OpmFate" },
+		{ "Hex Terrain", "OpmHexTerrain" },
+		{ "New Hex", "OpmNewHex" },
+		{ "Hex POI", "OpmHexPOI" },
 		{ "Action", "OpmAction" },
 		{ "Description", "OpmDescription" },
 		{ "Character", "OpmCharacter" },

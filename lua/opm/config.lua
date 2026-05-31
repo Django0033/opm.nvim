@@ -18,6 +18,9 @@ local defaults = {
 		location_area       = "<leader>rl",
 		location_descriptor = "<leader>rs",
 		location_exits      = "<leader>re",
+		hex_terrain         = "<leader>rt",
+		hex_new             = "<leader>rn",
+		hex_poi             = "<leader>rp",
 	},
 	float = { border = "rounded", height = 0.4, width = 0.6 },
 }
