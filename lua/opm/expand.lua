@@ -1,6 +1,6 @@
 local M = {}
 
-local magic = require("opm.meaning")
+local meaning = require("opm.meaning")
 local dice = require("opm.dice")
 local behavior = require("opm.behavior")
 local creature_behavior = require("opm.creature_behavior")
@@ -13,13 +13,13 @@ local ui = require("opm.ui")
 
 local tbl_formatters = {
 	["Action"] = function()
-		local r1 = magic.roll_meaning("action")
-		local r2 = magic.roll_meaning("action")
+		local r1 = meaning.roll_meaning("action")
+		local r2 = meaning.roll_meaning("action")
 		return string.format("tbl: Action 2d100=%d,%d -> %s/%s", r1.roll, r2.roll, r1.word, r2.word)
 	end,
 	["Description"] = function()
-		local r1 = magic.roll_meaning("description")
-		local r2 = magic.roll_meaning("description")
+		local r1 = meaning.roll_meaning("description")
+		local r2 = meaning.roll_meaning("description")
 		return string.format("tbl: Description 2d100=%d,%d -> %s/%s", r1.roll, r2.roll, r1.word, r2.word)
 	end,
 	["Character Behavior"] = function()
@@ -48,43 +48,29 @@ local tbl_formatters = {
 	end,
 }
 
-local function roll_d100()
-	return dice.roll_d100()
-end
-
 local gen_formatters = {
 	["Character"] = function()
-		local ir, mr, br, tr = roll_d100(), roll_d100(), roll_d100(), roll_d100()
+		local ir, mr, br, tr = dice.roll_d100(), dice.roll_d100(), dice.roll_d100(), dice.roll_d100()
 		local iw = tables.character.identity.entries[ir]
 		local mw = tables.character.mind.entries[mr]
 		local bw = tables.character.body.entries[br]
 		local tw = tables.character.talent.entries[tr]
-		local sr = dice.roll_d10()
-		local st = tables.statistics.statistics
-		local sw = "Unknown"
-		for _, e in ipairs(st.entries) do
-			if sr >= e.min and sr <= e.max then sw = e.result; break end
-		end
+		local sr, sw = dice.roll_statistics(tables.statistics.statistics)
 		return string.format(
 			"gen: Character\n    Identity: d100=%d -> %s\n    Mind: d100=%d -> %s\n    Body: d100=%d -> %s\n    Talent: d100=%d -> %s\n    Statistics: d10=%d -> %s",
 			ir, iw, mr, mw, br, bw, tr, tw, sr, sw
 		)
 	end,
 	["Creature"] = function()
-		local d1, d2 = roll_d100(), roll_d100()
+		local d1, d2 = dice.roll_d100(), dice.roll_d100()
 		local dw1 = tables.creature.descriptor.entries[d1]
 		local dw2 = tables.creature.descriptor.entries[d2]
 		local bi = dice.roll_d10()
 		local bw = tables.creature.behavior_initial.entries[bi]
-		local a1, a2 = roll_d100(), roll_d100()
+		local a1, a2 = dice.roll_d100(), dice.roll_d100()
 		local aw1 = tables.creature.ability.entries[a1]
 		local aw2 = tables.creature.ability.entries[a2]
-		local sr = dice.roll_d10()
-		local st = tables.statistics.statistics
-		local sw = "Unknown"
-		for _, e in ipairs(st.entries) do
-			if sr >= e.min and sr <= e.max then sw = e.result; break end
-		end
+		local sr, sw = dice.roll_statistics(tables.statistics.statistics)
 		return string.format(
 			"gen: Creature\n    Appearance: 2d100=%d,%d -> %s/%s\n    Behavior: d10=%d -> %s\n    Ability: 2d100=%d,%d -> %s/%s\n    Statistics: d10=%d -> %s",
 			d1, d2, dw1, dw2, bi, bw, a1, a2, aw1, aw2, sr, sw
@@ -136,7 +122,7 @@ function M.expand_current_line()
 
 	if trimmed:match("^tbl: ") then
 		local name = trimmed:match("^tbl: (.+)")
-		local box_count = nil
+		local box_count
 		if name then
 			box_count = name:match("Mystery Check (%d+)$")
 			if box_count then

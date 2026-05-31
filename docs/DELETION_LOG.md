@@ -64,7 +64,44 @@
 - All 13 tests passing (13 passed, 0 failed)
 - Test framework failure-detection bug fixed
 
-### Remaining (manual review / future)
+## 2026-05-30 Refactor Session
 
-- `lua/opm/dice.lua:11` — `M.roll_dice(sides)` is exported but never called internally. Kept as reasonable public API for users who may call `require("opm.dice").roll_dice(20)` from their config.
-- Range-lookup pattern (`roll_in_range`) still scattered across `behavior.lua`, `mystery.lua`, `meaning.lua`, and `plugin/opm.lua` — could be extracted to a shared utility module in a future refactor.
+### Dead Code Removed
+
+| File | Item | Reason |
+|------|------|--------|
+| `lua/opm/expand.lua:51-53` | `local function roll_d100()` | Dead wrapper — just called `dice.roll_d100()`. Replaced all 6 callers with direct `dice.roll_d100()` calls. |
+| `lua/opm/expand.lua:139` | `local box_count = nil` | Redundant `= nil` — variable is already nil by default in Lua |
+| `plugin/opm.lua:10-19` | `local function roll_statistics(dice, tables)` | Duplicate of statistics lookup logic — moved to `dice.roll_statistics()` |
+| `plugin/opm.lua:123-125` | `local function roll_d100()` | Dead wrapper — replaced 4 callers with direct `dice.roll_d100()` calls |
+| `plugin/opm.lua:267` | Unused `total, result` variables in `OpmHexTerrain` | Never read after destructuring |
+| `plugin/opm.lua:276` | Unused `total, result` variables in `OpmNewHex` | Never read after destructuring |
+
+### Variable Renamed for Clarity
+
+| File | Change |
+|------|--------|
+| `lua/opm/expand.lua:3` | `magic` → `meaning` (was importing `opm.meaning`) |
+
+### Duplicate Code Consolidated
+
+| Consolidation | Files | Savings |
+|---------------|-------|---------|
+| Statistics range lookup (3 copies) → `dice.roll_statistics()` | `expand.lua`, `plugin/opm.lua` | 15 lines removed |
+| Dead `roll_d100()` wrappers removed (2 copies) | `expand.lua`, `plugin/opm.lua` | 6 lines removed |
+
+### Impact
+
+- Lines of dead code removed: ~24
+- Duplicate functions consolidated: 1 (statistics lookup)
+- Dead wrappers eliminated: 2 (`roll_d100` in 2 files)
+- Unused variables cleaned: 4
+- Files modified: 4 (expand.lua, plugin/opm.lua, dice.lua, DELETION_LOG.md)
+
+### Files Changed
+
+- `lua/opm/dice.lua` — Added `roll_statistics()` shared utility
+- `lua/opm/expand.lua` — Removed `roll_d100()` wrapper, redundant nil init, renamed `magic` → `meaning`, used shared `dice.roll_statistics()`
+- `plugin/opm.lua` — Removed `roll_d100()` wrapper, removed local `roll_statistics()`, cleaned unused variables, used shared `dice.roll_statistics()`
+
+---

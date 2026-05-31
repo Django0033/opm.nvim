@@ -7,17 +7,6 @@ local function show_double_event(msg)
 	end, 100)
 end
 
-local function roll_statistics(dice, tables)
-	local roll = dice.roll_d10()
-	local tbl = tables.statistics.statistics
-	for _, entry in ipairs(tbl.entries) do
-		if roll >= entry.min and roll <= entry.max then
-			return roll, entry.result
-		end
-	end
-	return roll, "Unknown"
-end
-
 local function get_odds_completion(arglead, cmdline, cursor)
 	local odds = constants.ODDS_TYPES
 	local colon_pos = arglead:find(":")
@@ -120,21 +109,17 @@ vim.api.nvim_create_user_command("OpmCharacter", function()
 	local dice = require("opm.dice")
 	local tables = require("opm.tables")
 
-	local function roll_d100()
-		return dice.roll_d100()
-	end
-
-	local identity_roll = roll_d100()
-	local mind_roll = roll_d100()
-	local body_roll = roll_d100()
-	local talent_roll = roll_d100()
+	local identity_roll = dice.roll_d100()
+	local mind_roll = dice.roll_d100()
+	local body_roll = dice.roll_d100()
+	local talent_roll = dice.roll_d100()
 
 	local identity_word = tables.character.identity.entries[identity_roll]
 	local mind_word = tables.character.mind.entries[mind_roll]
 	local body_word = tables.character.body.entries[body_roll]
 	local talent_word = tables.character.talent.entries[talent_roll]
 
-	local stats_roll, stats_result = roll_statistics(dice, tables)
+	local stats_roll, stats_result = dice.roll_statistics(tables.statistics.statistics)
 
 	local insert_text = string.format(
 		"gen: Character\n    Identity: d100=%d -> %s\n    Mind: d100=%d -> %s\n    Body: d100=%d -> %s\n    Talent: d100=%d -> %s\n    Statistics: d10=%d -> %s",
@@ -177,7 +162,7 @@ vim.api.nvim_create_user_command("OpmCreature", function()
 	local ability1 = tables.creature.ability.entries[aidx1]
 	local ability2 = tables.creature.ability.entries[aidx2]
 
-	local stats_roll, stats_result = roll_statistics(dice, tables)
+	local stats_roll, stats_result = dice.roll_statistics(tables.statistics.statistics)
 
 	local insert_text = string.format(
 		"gen: Creature\n    Appearance: 2d100=%d,%d -> %s/%s\n    Behavior: d10=%d -> %s\n    Ability: 2d100=%d,%d -> %s/%s\n    Statistics: d10=%d -> %s",
@@ -268,7 +253,7 @@ vim.api.nvim_create_user_command("OpmHexTerrain", function()
 	local hex_map = require("opm.hex_map")
 	local ui = require("opm.ui")
 
-	local text, total, result = hex_map.roll_terrain()
+	local text = hex_map.roll_terrain()
 	ui.show_result("Hex Terrain", { text }, { title = "Opm", insert_text = text })
 end, { nargs = 0, desc = "Roll 2d10 for hex terrain type" })
 
@@ -277,7 +262,7 @@ vim.api.nvim_create_user_command("OpmNewHex", function(opts)
 	local ui = require("opm.ui")
 
 	local function show(chaos)
-		local text, total, result, is_double = hex_map.roll_new_hex(chaos)
+		local text, _, _, is_double = hex_map.roll_new_hex(chaos)
 		ui.show_result("New Hex", { text }, { title = "Opm", insert_text = text })
 		if is_double then
 			show_double_event("Point of Interest triggered! Roll OpmHexPOI")
